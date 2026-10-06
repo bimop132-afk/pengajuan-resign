@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Pengajuan Resign</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header text-center">
+            <h1>Form Pengajuan Resign Karyawan</h1>
+            <p>PT Mitra Sigma Tekindo</p>
+        </header>
+
+        <div class="card">
+            <div class="progress-indicator">
+                <div class="step active" id="step-indicator-1">
+                    <div class="step-num">1</div>
+                    <div class="step-text">Data Karyawan</div>
+                </div>
+                <div class="step" id="step-indicator-2">
+                    <div class="step-num">2</div>
+                    <div class="step-text">Data Pengajuan</div>
+                </div>
+                <div class="step" id="step-indicator-3">
+                    <div class="step-num">3</div>
+                    <div class="step-text">Persetujuan</div>
+                </div>
+            </div>
+
+            <form id="form-resign">
+                <!-- Step 1: Data Karyawan -->
+                <div id="section1" class="form-section active">
+                    <h3>Data Karyawan</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="nik">NIK</label>
+                            <input type="text" id="nik" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="nama_lengkap">Nama Lengkap</label>
+                            <input type="text" id="nama_lengkap" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tempat_lahir">Tempat Lahir</label>
+                            <input type="text" id="tempat_lahir" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tanggal_lahir">Tanggal Lahir</label>
+                            <input type="date" id="tanggal_lahir" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="jenis_kelamin">Jenis Kelamin</label>
+                            <select id="jenis_kelamin" class="form-select">
+                                <option value="">Pilih...</option>
+                                <option value="Laki-laki">Laki-laki</option>
+                                <option value="Perempuan">Perempuan</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="no_whatsapp">No WhatsApp</label>
+                            <input type="tel" id="no_whatsapp" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email</label>
+                            <input type="email" id="email" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="jabatan">Jabatan</label>
+                            <input type="text" id="jabatan" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="departemen">Departemen</label>
+                            <input type="text" id="departemen" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="sektor">Sektor</label>
+                            <input type="text" id="sektor" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="regu">Regu</label>
+                            <input type="text" id="regu" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tanggal_mulai_bekerja">Tanggal Mulai Bekerja</label>
+                            <input type="date" id="tanggal_mulai_bekerja" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="atasan_pic">Atasan/PIC</label>
+                            <input type="text" id="atasan_pic" class="form-control">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="alamat">Alamat</label>
+                            <textarea id="alamat" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-actions mt-4 text-right">
+                        <button type="button" class="btn btn-primary" onclick="nextStep(2)">Selanjutnya <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Data Pengajuan -->
+                <div id="section2" class="form-section" style="display: none;">
+                    <h3>Data Pengajuan</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="tanggal_pengajuan">Tanggal Pengajuan</label>
+                            <input type="date" id="tanggal_pengajuan" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tanggal_efektif_resign">Tanggal Efektif Resign</label>
+                            <input type="date" id="tanggal_efektif_resign" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="alasan_resign">Alasan Resign</label>
+                            <select id="alasan_resign" class="form-select" required>
+                                <option value="">Pilih Alasan Resign...</option>
+                                <option value="Mendapat pekerjaan baru">Mendapat pekerjaan baru</option>
+                                <option value="Keperluan keluarga">Keperluan keluarga</option>
+                                <option value="Melanjutkan pendidikan">Melanjutkan pendidikan</option>
+                                <option value="Alasan pribadi">Alasan pribadi</option>
+                                <option value="Tidak sesuai dengan pekerjaan">Tidak sesuai dengan pekerjaan</option>
+                                <option value="Kondisi kesehatan">Kondisi kesehatan</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="alasan_lainnya_container" style="display: none; grid-column: 1 / -1;">
+                            <label class="form-label" for="alasan_lainnya">Sebutkan Alasan Lainnya</label>
+                            <textarea id="alasan_lainnya" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="keterangan">Keterangan Tambahan</label>
+                            <textarea id="keterangan" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="dokumen_pendukung">Dokumen Pendukung (Opsional)</label>
+                            <div class="file-upload-area">
+                                <input type="file" id="dokumen_pendukung" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions mt-4" style="display: flex; justify-content: space-between;">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep(1)"><i class="fas fa-arrow-left"></i> Sebelumnya</button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(3)">Selanjutnya <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Persetujuan -->
+                <div id="section3" class="form-section" style="display: none;">
+                    <h3>Persetujuan</h3>
+                    <div class="form-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="confirm_1" required>
+                            <span class="checkmark"></span>
+                            Saya menyatakan bahwa seluruh data yang saya isikan di atas adalah benar dan dapat dipertanggungjawabkan.
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="confirm_2" required>
+                            <span class="checkmark"></span>
+                            Saya mengerti bahwa pengajuan resign ini akan diproses sesuai dengan peraturan perusahaan yang berlaku.
+                        </label>
+                    </div>
+                    <div class="form-actions mt-4" style="display: flex; justify-content: space-between;">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep(2)"><i class="fas fa-arrow-left"></i> Sebelumnya</button>
+                        <button type="button" class="btn btn-success" onclick="showConfirmation()">Kirim Pengajuan <i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content">
+            <h3>Konfirmasi</h3>
+            <p>Apakah Anda yakin data pengajuan resign sudah benar?</p>
+            <div class="modal-actions mt-4" style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="button" class="btn btn-secondary" onclick="closeConfirmation()">BATAL</button>
+                <button type="button" class="btn btn-primary" onclick="submitForm()">YA, KIRIM PENGAJUAN</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/form.js"></script>
+</body>
+</html>

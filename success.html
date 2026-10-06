@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengajuan Berhasil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container text-center">
+        <div class="card mt-5">
+            <div class="success-icon mb-4 text-success" style="font-size: 4rem;">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>PENGAJUAN BERHASIL</h2>
+            <p class="mb-4">Terima kasih, pengajuan resign Anda telah berhasil dikirim dan akan segera diproses oleh HRD.</p>
+            
+            <div class="detail-card text-left p-4 mb-4" style="background: #f8f9fa; border-radius: 8px;">
+                <h4>Detail Pengajuan</h4>
+                <div class="grid" style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin-top: 15px;">
+                    <strong>ID Pengajuan:</strong> <span id="detail_id_pengajuan"></span>
+                    <strong>Nama:</strong> <span id="detail_nama"></span>
+                    <strong>Tgl Pengajuan:</strong> <span id="detail_tanggal_pengajuan"></span>
+                    <strong>Tgl Efektif:</strong> <span id="detail_tanggal_efektif"></span>
+                    <strong>Status:</strong> <span id="detail_status" class="badge"></span>
+                    <strong>Nomor Surat:</strong> <span id="detail_nomor_surat"></span>
+                </div>
+            </div>
+
+            <p class="alert alert-info">Silakan simpan atau cetak surat resign ini sebagai bukti pengajuan.</p>
+            
+            <div class="action-buttons mt-4" style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="viewSurat()"><i class="fas fa-eye"></i> LIHAT SURAT RESIGN</button>
+                <button class="btn btn-secondary" onclick="printSurat()"><i class="fas fa-print"></i> CETAK SURAT</button>
+                <button class="btn btn-success" onclick="downloadPDF()"><i class="fas fa-file-pdf"></i> SIMPAN PDF</button>
+            </div>
+            
+            <div class="mt-4">
+                <a href="index.html" class="btn btn-link">Kembali ke Beranda</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Container for PDF/Print -->
+    <div id="surat-container" style="display: none; padding: 20mm; background: white; color: black; font-family: 'Times New Roman', Times, serif; line-height: 1.5;">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h2 style="margin: 0;"><strong>PT MITRA SIGMA TEKINDO</strong></h2>
+            <hr style="border: 1px solid black;">
+        </div>
+        
+        <div style="text-align: center; margin-bottom: 30px;">
+            <h3 style="margin: 0; text-decoration: underline;">SURAT PENGAJUAN RESIGN</h3>
+            <p style="margin: 0;">Nomor: <span id="surat-nomor"></span></p>
+        </div>
+
+        <p>Kepada Yth. HRD PT Mitra Sigma Tekindo di Tempat</p>
+        <p>Dengan hormat,</p>
+        <p>Saya yang bertanda tangan di bawah ini:</p>
+        <table style="width: 100%; margin-left: 20px; margin-bottom: 20px;">
+            <tr><td style="width: 150px;">Nama</td><td>: <span id="surat-nama"></span></td></tr>
+            <tr><td>NIK</td><td>: <span id="surat-nik"></span></td></tr>
+            <tr><td>Jabatan</td><td>: <span id="surat-jabatan"></span></td></tr>
+            <tr><td>Departemen</td><td>: <span id="surat-departemen"></span></td></tr>
+            <tr><td>Sektor</td><td>: <span id="surat-sektor"></span></td></tr>
+            <tr><td>Regu</td><td>: <span id="surat-regu"></span></td></tr>
+        </table>
+        
+        <p>Dengan ini mengajukan permohonan pengunduran diri dari PT Mitra Sigma Tekindo, terhitung efektif mulai tanggal: <strong id="surat-tanggal-efektif"></strong></p>
+        <p>Adapun alasan pengunduran diri saya adalah: <strong id="surat-alasan"></strong></p>
+        <p>Demikian surat pengajuan pengunduran diri ini saya buat dengan sebenar-benarnya tanpa ada paksaan dari pihak manapun.</p>
+        
+        <div style="margin-top: 50px; text-align: right;">
+            <p>Majalengka, <span id="surat-tanggal-pengajuan"></span></p>
+            <p>Hormat saya,</p>
+            <br><br><br>
+            <p><strong id="surat-ttd-nama"></strong><br>NIK. <span id="surat-ttd-nik"></span></p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/surat.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const data = JSON.parse(sessionStorage.getItem('resign_data') || '{}');
+            if (data.idPengajuan) {
+                document.getElementById('detail_id_pengajuan').textContent = data.idPengajuan;
+                document.getElementById('detail_nama').textContent = data['Nama Lengkap'] || data.nama_lengkap;
+                document.getElementById('detail_tanggal_pengajuan').textContent = data['Tanggal Pengajuan'] || data.tanggal_pengajuan;
+                document.getElementById('detail_tanggal_efektif').textContent = data['Tanggal Efektif Resign'] || data.tanggal_efektif_resign;
+                document.getElementById('detail_status').textContent = data['Status Pengajuan'] || 'PENGAJUAN BARU';
+                document.getElementById('detail_nomor_surat').textContent = data['Nomor Surat'] || '-';
+                
+                if (typeof populateSurat === 'function') {
+                    populateSurat(data);
+                }
+            }
+        });
+        function viewSurat() { window.location.href = 'surat.html'; }
+    </script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cek Status Pengajuan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header text-center position-relative">
+            <button class="btn btn-icon" style="position: absolute; left: 0; top: 0;" onclick="window.location.href='index.html'">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2>Cek Status Pengajuan Resign</h2>
+        </header>
+
+        <div class="card mb-4">
+            <form id="search-form" onsubmit="event.preventDefault(); checkStatus();">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="search_nik">NIK</label>
+                        <input type="text" id="search_nik" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="search_id_pengajuan">ID Pengajuan</label>
+                        <input type="text" id="search_id_pengajuan" class="form-control" required>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-primary">CEK STATUS</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="error-area" class="alert alert-danger" style="display: none;"></div>
+
+        <div id="result-area" class="card" style="display: none;">
+            <h4>Detail Pengajuan</h4>
+            <div class="grid" style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin-bottom: 20px;">
+                <strong>Nama:</strong> <span id="result_nama"></span>
+                <strong>NIK:</strong> <span id="result_nik"></span>
+                <strong>Tgl Pengajuan:</strong> <span id="result_tanggal_pengajuan"></span>
+                <strong>Tgl Efektif:</strong> <span id="result_tanggal_efektif"></span>
+                <strong>Status:</strong> <span id="result_status" class="badge"></span>
+                <strong>Nomor Surat:</strong> <span id="result_nomor_surat"></span>
+            </div>
+
+            <div class="timeline mt-4 mb-4">
+                <div id="timeline-1" class="step-item">Pengajuan Dibuat</div>
+                <div id="timeline-2" class="step-item">Diperiksa HRD</div>
+                <div id="timeline-3" class="step-item">Disetujui</div>
+                <div id="timeline-4" class="step-item">Selesai</div>
+            </div>
+
+            <div id="rejection-reason" class="alert alert-warning" style="display: none;"></div>
+
+            <div class="text-center mt-4">
+                <button class="btn btn-secondary" onclick="window.location.href='surat.html'">Lihat/Cetak Surat</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        async function checkStatus() {
+            const nik = document.getElementById('search_nik').value;
+            const idPengajuan = document.getElementById('search_id_pengajuan').value;
+            const errorArea = document.getElementById('error-area');
+            const resultArea = document.getElementById('result-area');
+            
+            errorArea.style.display = 'none';
+            resultArea.style.display = 'none';
+
+            try {
+                // apiCall should be available from app.js
+                const res = await apiCall('checkStatus', { nik, idPengajuan }, 'GET');
+                if (res.success && res.data) {
+                    const data = res.data;
+                    sessionStorage.setItem('resign_data', JSON.stringify(data));
+                    
+                    document.getElementById('result_nama').textContent = data['Nama Lengkap'];
+                    document.getElementById('result_nik').textContent = data['NIK'];
+                    document.getElementById('result_tanggal_pengajuan').textContent = data['Tanggal Pengajuan'];
+                    document.getElementById('result_tanggal_efektif').textContent = data['Tanggal Efektif Resign'];
+                    document.getElementById('result_status').textContent = data['Status Pengajuan'];
+                    document.getElementById('result_nomor_surat').textContent = data['Nomor Surat'] || '-';
+                    
+                    // Reset timeline
+                    document.querySelectorAll('.step-item').forEach(el => {
+                        el.classList.remove('active', 'completed', 'rejected');
+                    });
+                    
+                    const status = data['Status Pengajuan'];
+                    const t1 = document.getElementById('timeline-1');
+                    const t2 = document.getElementById('timeline-2');
+                    const t3 = document.getElementById('timeline-3');
+                    const t4 = document.getElementById('timeline-4');
+                    const rejectArea = document.getElementById('rejection-reason');
+                    rejectArea.style.display = 'none';
+
+                    t1.classList.add('completed');
+                    
+                    if (status === 'PENGAJUAN BARU') {
+                        t1.classList.add('active');
+                    } else if (status === 'DIPERIKSA HRD') {
+                        t2.classList.add('active', 'completed');
+                    } else if (status === 'DISETUJUI') {
+                        t2.classList.add('completed');
+                        t3.classList.add('active', 'completed');
+                    } else if (status === 'SELESAI') {
+                        t2.classList.add('completed');
+                        t3.classList.add('completed');
+                        t4.classList.add('active', 'completed');
+                    } else if (status === 'DITOLAK') {
+                        t2.classList.add('completed');
+                        t3.classList.add('rejected');
+                        t3.textContent = 'Ditolak';
+                        rejectArea.style.display = 'block';
+                        rejectArea.textContent = 'Alasan penolakan: ' + (data['Keterangan'] || 'Silakan hubungi HRD');
+                    }
+                    
+                    resultArea.style.display = 'block';
+                } else {
+                    errorArea.textContent = res.message || 'Data tidak ditemukan';
+                    errorArea.style.display = 'block';
+                }
+            } catch (err) {
+                errorArea.textContent = 'Terjadi kesalahan sistem';
+                errorArea.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
