@@ -3,36 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login HRD</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Login HRD Admin - PT Mitra Sigma Tekindo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #f4f6f9;">
-    <div class="card" style="width: 100%; max-width: 400px; text-align: center;">
-        <i class="fas fa-building" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 10px;"></i>
-        <h2>LOGIN HRD</h2>
-        <p class="mb-4">PT Mitra Sigma Tekindo</p>
+<body style="background: linear-gradient(135deg, var(--primary-900) 0%, #1e293b 60%, #0f172a 100%); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1.5rem;">
+
+    <div class="card" style="width: 100%; max-width: 440px; padding: 2.75rem 2.25rem; border-radius: var(--radius-xl); box-shadow: var(--shadow-xl); border: 1px solid rgba(255, 255, 255, 0.1);">
+        
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="width: 64px; height: 64px; background: linear-gradient(135deg, var(--primary-600), var(--accent-600)); color: #ffffff; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; margin: 0 auto 1.25rem; box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <h2 style="font-size: 1.6rem; color: var(--gray-900); margin-bottom: 0.25rem;">PORTAL LOGIN HRD</h2>
+            <p style="color: var(--gray-500); font-size: 0.9rem; margin: 0;">PT Mitra Sigma Tekindo</p>
+        </div>
+
+        <!-- Login Error Container -->
+        <div id="login-error" style="display: none; background: var(--danger-50); border: 1px solid var(--danger-100); border-radius: var(--radius-sm); padding: 0.85rem 1rem; color: var(--danger-700); font-size: 0.88rem; margin-bottom: 1.5rem;">
+            <i class="fas fa-exclamation-circle"></i> Username atau password salah.
+        </div>
 
         <form id="login-form">
-            <div class="form-group text-left">
-                <label for="username">Username</label>
-                <input type="text" id="username" class="form-control" required>
-            </div>
-            <div class="form-group text-left position-relative">
-                <label for="password">Password</label>
+            <div class="form-group" style="margin-bottom: 1.25rem;">
+                <label class="form-label" for="username">Username Admin</label>
                 <div style="position: relative;">
-                    <input type="password" id="password" class="form-control" required style="padding-right: 40px;">
-                    <i class="fas fa-eye" id="toggle-password-icon" style="position: absolute; right: 10px; top: 12px; cursor: pointer;"></i>
+                    <input type="text" id="username" class="form-control" placeholder="Masukkan username" required style="padding-left: 2.5rem;">
+                    <i class="fas fa-user" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--gray-400);"></i>
                 </div>
             </div>
-            <div id="login-error" class="alert alert-danger" style="display: none; margin-top: 10px;"></div>
-            <button type="submit" class="btn btn-primary w-100 mt-3">Login</button>
+
+            <div class="form-group" style="margin-bottom: 1.75rem;">
+                <label class="form-label" for="password">Password</label>
+                <div style="position: relative;">
+                    <input type="password" id="password" class="form-control" placeholder="Masukkan password" required style="padding-left: 2.5rem; padding-right: 2.5rem;">
+                    <i class="fas fa-lock" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--gray-400);"></i>
+                    <i id="toggle-password-icon" class="fas fa-eye" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: var(--gray-400); cursor: pointer;"></i>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-bottom: 1.5rem;">
+                <i class="fas fa-sign-in-alt"></i> MASUK KE DASHBOARD
+            </button>
         </form>
 
-        <div class="mt-4">
-            <a href="index.html" class="btn btn-link">Kembali ke Beranda</a>
+        <div style="text-align: center;">
+            <a href="index.html" class="text-muted" style="font-size: 0.88rem; font-weight: 600;">
+                <i class="fas fa-arrow-left"></i> Kembali ke Beranda Utama
+            </a>
         </div>
+
     </div>
 
     <script src="js/config.js"></script>

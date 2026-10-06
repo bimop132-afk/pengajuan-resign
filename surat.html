@@ -3,86 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surat Resign</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Surat Pengajuan Resign Resmi - PT Mitra Sigma Tekindo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        @media print {
-            .toolbar { display: none !important; }
-            body { background: white; margin: 0; padding: 0; }
-            #surat-container { box-shadow: none !important; margin: 0; width: 100%; height: 100%; }
-        }
-        .surat-wrapper { display: flex; justify-content: center; padding: 20px; background: #f0f2f5; min-height: 100vh; }
-        #surat-container {
-            width: 210mm;
-            min-height: 297mm;
-            padding: 20mm;
-            background: white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            font-family: 'Times New Roman', Times, serif;
-            line-height: 1.5;
-            color: black;
-            box-sizing: border-box;
-        }
-        .toolbar { position: fixed; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 100; }
-    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
-<body>
-    <div class="toolbar">
-        <button class="btn btn-secondary" onclick="window.history.back()"><i class="fas fa-arrow-left"></i> Kembali</button>
-        <button class="btn btn-primary" onclick="printSurat()"><i class="fas fa-print"></i> Cetak Surat</button>
-        <button class="btn btn-success" onclick="downloadPDF()"><i class="fas fa-file-pdf"></i> Simpan PDF</button>
-    </div>
+<body class="letter-page-bg">
 
-    <div class="surat-wrapper">
-        <div id="surat-container">
-            <div style="text-align: center; margin-bottom: 20px;">
-                <h2 style="margin: 0;"><strong>PT MITRA SIGMA TEKINDO</strong></h2>
-                <hr style="border: 1px solid black; margin-top: 10px;">
-            </div>
-            
-            <div style="text-align: center; margin-bottom: 30px;">
-                <h3 style="margin: 0; text-decoration: underline;">SURAT PENGAJUAN RESIGN</h3>
-                <p style="margin: 0;">Nomor: <span id="surat-nomor"></span></p>
-            </div>
-
-            <p>Kepada Yth. HRD PT Mitra Sigma Tekindo di Tempat</p>
-            <p>Dengan hormat,</p>
-            <p>Saya yang bertanda tangan di bawah ini:</p>
-            <table style="width: 100%; margin-left: 20px; margin-bottom: 20px;">
-                <tr><td style="width: 150px;">Nama</td><td>: <span id="surat-nama"></span></td></tr>
-                <tr><td>NIK</td><td>: <span id="surat-nik"></span></td></tr>
-                <tr><td>Jabatan</td><td>: <span id="surat-jabatan"></span></td></tr>
-                <tr><td>Departemen</td><td>: <span id="surat-departemen"></span></td></tr>
-                <tr><td>Sektor</td><td>: <span id="surat-sektor"></span></td></tr>
-                <tr><td>Regu</td><td>: <span id="surat-regu"></span></td></tr>
-            </table>
-            
-            <p>Dengan ini mengajukan permohonan pengunduran diri dari PT Mitra Sigma Tekindo, terhitung efektif mulai tanggal: <strong id="surat-tanggal-efektif"></strong></p>
-            <p>Adapun alasan pengunduran diri saya adalah: <strong id="surat-alasan"></strong></p>
-            <p>Demikian surat pengajuan pengunduran diri ini saya buat dengan sebenar-benarnya tanpa ada paksaan dari pihak manapun.</p>
-            
-            <div style="margin-top: 50px; text-align: right;">
-                <p>Majalengka, <span id="surat-tanggal-pengajuan"></span></p>
-                <p>Hormat saya,</p>
-                <br><br><br>
-                <p><strong id="surat-ttd-nama"></strong><br>NIK. <span id="surat-ttd-nik"></span></p>
-            </div>
+    <!-- Top Action Toolbar -->
+    <div class="letter-toolbar">
+        <a href="index.html" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Kembali ke Beranda
+        </a>
+        <div style="display: flex; gap: 0.75rem;">
+            <button onclick="printLetter()" class="btn btn-primary">
+                <i class="fas fa-print"></i> CETAK SURAT
+            </button>
+            <button onclick="downloadPDF()" class="btn btn-success">
+                <i class="fas fa-file-pdf"></i> SIMPAN PDF (A4)
+            </button>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Official A4 Document Paper -->
+    <div class="letter-paper" id="surat-container">
+        
+        <!-- Company Header -->
+        <div class="letter-company-header">
+            <h1>PT MITRA SIGMA TEKINDO</h1>
+            <p>Jl. Perusahaan No. 123, Majalengka, Jawa Barat | Email: hrd@mitrasigmatekindo.co.id</p>
+        </div>
+        
+        <div class="letter-doc-title">SURAT PENGAJUAN RESIGN</div>
+        <div class="letter-doc-no">Nomor: <span id="surat-nomor">-</span></div>
+
+        <p style="margin-bottom: 1.5rem;">
+            Kepada Yth.<br>
+            <strong>HRD PT Mitra Sigma Tekindo</strong><br>
+            di Tempat
+        </p>
+
+        <p>Dengan hormat,</p>
+        <p>Saya yang bertanda tangan di bawah ini:</p>
+
+        <table class="letter-table-details">
+            <tr>
+                <td>Nama Lengkap</td>
+                <td>:</td>
+                <td><strong id="surat-nama">-</strong></td>
+            </tr>
+            <tr>
+                <td>NIK</td>
+                <td>:</td>
+                <td id="surat-nik">-</td>
+            </tr>
+            <tr>
+                <td>Jabatan</td>
+                <td>:</td>
+                <td id="surat-jabatan">-</td>
+            </tr>
+            <tr>
+                <td>Departemen</td>
+                <td>:</td>
+                <td id="surat-departemen">-</td>
+            </tr>
+            <tr>
+                <td>Sektor</td>
+                <td>:</td>
+                <td id="surat-sektor">-</td>
+            </tr>
+            <tr>
+                <td>Regu</td>
+                <td>:</td>
+                <td id="surat-regu">-</td>
+            </tr>
+        </table>
+
+        <p style="margin-top: 1.5rem;">
+            Dengan ini mengajukan permohonan pengunduran diri dari PT Mitra Sigma Tekindo, terhitung efektif mulai tanggal:
+        </p>
+
+        <p style="text-align: center; margin: 1.25rem 0;">
+            <strong style="font-size: 1.15rem; text-decoration: underline;" id="surat-tanggal-efektif">-</strong>
+        </p>
+
+        <p>Adapun alasan pengunduran diri saya adalah:</p>
+
+        <p style="padding-left: 1.5rem;">
+            <strong id="surat-alasan">-</strong>
+        </p>
+
+        <p style="margin-top: 1.5rem;">
+            Demikian surat pengajuan resign ini saya buat dengan sebenar-benarnya dan tanpa adanya paksaan dari pihak manapun. 
+            Saya mengucapkan terima kasih atas kesempatan dan pengalaman yang telah diberikan selama bekerja di PT Mitra Sigma Tekindo.
+        </p>
+
+        <!-- Signature Area -->
+        <div class="letter-signature-section">
+            <p>Majalengka, <span id="surat-tanggal-pengajuan">-</span></p>
+            <p>Hormat saya,</p>
+            <div class="letter-signature-space"></div>
+            <div class="letter-signature-name" id="surat-ttd-nama">-</div>
+            <div>NIK. <span id="surat-ttd-nik">-</span></div>
+        </div>
+        
+        <div style="clear: both;"></div>
+    </div>
+
     <script src="js/config.js"></script>
     <script src="js/app.js"></script>
     <script src="js/surat.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const data = JSON.parse(sessionStorage.getItem('resign_data') || '{}');
-            if (data.idPengajuan && typeof populateSurat === 'function') {
-                populateSurat(data);
-            }
-        });
-    </script>
 </body>
 </html>

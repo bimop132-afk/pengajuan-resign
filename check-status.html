@@ -3,134 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cek Status Pengajuan</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Cek Status Pengajuan Resign - PT Mitra Sigma Tekindo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="container">
-        <header class="header text-center position-relative">
-            <button class="btn btn-icon" style="position: absolute; left: 0; top: 0;" onclick="window.location.href='index.html'">
-                <i class="fas fa-arrow-left"></i>
-            </button>
-            <h2>Cek Status Pengajuan Resign</h2>
-        </header>
 
-        <div class="card mb-4">
+    <!-- Header Navigation -->
+    <header class="main-header">
+        <div class="container header-container">
+            <a href="index.html" class="brand-logo">
+                <div class="logo-badge"><i class="fas fa-building"></i></div>
+                <div class="brand-text">
+                    <h1>PT Mitra Sigma Tekindo</h1>
+                    <p>Cek Status Pengajuan Resign</p>
+                </div>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link-btn"><i class="fas fa-arrow-left"></i> Kembali ke Beranda</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container" style="padding-top: 3rem; padding-bottom: 4rem;">
+        
+        <!-- Search Card -->
+        <div class="card" style="max-width: 600px; margin: 0 auto 2.5rem;">
+            <div class="card-header-styled" style="margin-bottom: 1.5rem;">
+                <h3><i class="fas fa-search text-primary"></i> Lacak Pengajuan Resign</h3>
+            </div>
+            
             <form id="search-form" onsubmit="event.preventDefault(); checkStatus();">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="search_nik">NIK</label>
-                        <input type="text" id="search_nik" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="search_id_pengajuan">ID Pengajuan</label>
-                        <input type="text" id="search_id_pengajuan" class="form-control" required>
-                    </div>
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                    <label class="form-label" for="search_nik">NIK (Nomor Induk Karyawan) <span class="required">*</span></label>
+                    <input type="text" id="search_nik" class="form-control" placeholder="Masukkan NIK Anda" required>
                 </div>
-                <div class="text-center mt-3">
-                    <button type="submit" class="btn btn-primary">CEK STATUS</button>
+
+                <div class="form-group" style="margin-bottom: 1.75rem;">
+                    <label class="form-label" for="search_id_pengajuan">ID Pengajuan Unik <span class="required">*</span></label>
+                    <input type="text" id="search_id_pengajuan" class="form-control" placeholder="Contoh: RES-20261006-0001" required>
                 </div>
+
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                    <i class="fas fa-search"></i> CEK STATUS PENGAJUAN
+                </button>
             </form>
         </div>
 
-        <div id="error-area" class="alert alert-danger" style="display: none;"></div>
-
-        <div id="result-area" class="card" style="display: none;">
-            <h4>Detail Pengajuan</h4>
-            <div class="grid" style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin-bottom: 20px;">
-                <strong>Nama:</strong> <span id="result_nama"></span>
-                <strong>NIK:</strong> <span id="result_nik"></span>
-                <strong>Tgl Pengajuan:</strong> <span id="result_tanggal_pengajuan"></span>
-                <strong>Tgl Efektif:</strong> <span id="result_tanggal_efektif"></span>
-                <strong>Status:</strong> <span id="result_status" class="badge"></span>
-                <strong>Nomor Surat:</strong> <span id="result_nomor_surat"></span>
+        <!-- Result Area (Hidden initially) -->
+        <div id="result-area" class="card" style="display: none; max-width: 800px; margin: 0 auto;">
+            <div class="card-header-styled">
+                <h3><i class="fas fa-id-card text-primary"></i> Detail Pengajuan Resign</h3>
+                <span id="result_status" class="badge badge-baru">PENGAJUAN BARU</span>
             </div>
 
-            <div class="timeline mt-4 mb-4">
-                <div id="timeline-1" class="step-item">Pengajuan Dibuat</div>
-                <div id="timeline-2" class="step-item">Diperiksa HRD</div>
-                <div id="timeline-3" class="step-item">Disetujui</div>
-                <div id="timeline-4" class="step-item">Selesai</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 2rem;">
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--gray-500); font-weight: 700; text-transform: uppercase;">Nama Karyawan</span>
+                    <div id="result_nama" style="font-weight: 700; color: var(--gray-900); font-size: 1.05rem;">-</div>
+                </div>
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--gray-500); font-weight: 700; text-transform: uppercase;">NIK</span>
+                    <div id="result_nik" style="font-weight: 700; color: var(--gray-800);">-</div>
+                </div>
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--gray-500); font-weight: 700; text-transform: uppercase;">Nomor Surat</span>
+                    <div id="result_nomor_surat" style="font-weight: 700; color: var(--primary-600);">-</div>
+                </div>
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--gray-500); font-weight: 700; text-transform: uppercase;">Tanggal Pengajuan</span>
+                    <div id="result_tanggal_pengajuan" style="font-weight: 600; color: var(--gray-800);">-</div>
+                </div>
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--gray-500); font-weight: 700; text-transform: uppercase;">Tanggal Efektif Resign</span>
+                    <div id="result_tanggal_efektif" style="font-weight: 700; color: var(--danger-600);">-</div>
+                </div>
             </div>
 
-            <div id="rejection-reason" class="alert alert-warning" style="display: none;"></div>
+            <!-- Visual Timeline Stepper -->
+            <h4 style="margin-bottom: 1.5rem; font-size: 1.1rem;"><i class="fas fa-route text-primary"></i> Progress Status Pengajuan</h4>
 
-            <div class="text-center mt-4">
-                <button class="btn btn-secondary" onclick="window.location.href='surat.html'">Lihat/Cetak Surat</button>
+            <div class="status-timeline">
+                <div class="timeline-node" id="timeline-1">
+                    <div class="node-icon-circle"><i class="fas fa-file-upload"></i></div>
+                    <div class="node-title">Pengajuan Dibuat</div>
+                </div>
+
+                <div class="timeline-node" id="timeline-2">
+                    <div class="node-icon-circle"><i class="fas fa-user-check"></i></div>
+                    <div class="node-title">Diperiksa HRD</div>
+                </div>
+
+                <div class="timeline-node" id="timeline-3">
+                    <div class="node-icon-circle"><i class="fas fa-thumbs-up"></i></div>
+                    <div class="node-title">Disetujui</div>
+                </div>
+
+                <div class="timeline-node" id="timeline-4">
+                    <div class="node-icon-circle"><i class="fas fa-flag-checkered"></i></div>
+                    <div class="node-title">Selesai</div>
+                </div>
+            </div>
+
+            <!-- Alert Catatan HRD / Rejection Reason -->
+            <div id="rejection-reason" style="display: none; background: var(--danger-50); border: 1px solid var(--danger-100); border-radius: var(--radius-md); padding: 1.25rem; margin-top: 1.5rem;">
+                <h5 style="color: var(--danger-700); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-exclamation-triangle"></i> Catatan HRD
+                </h5>
+                <p id="rejection-text" style="color: var(--danger-700); margin: 0; font-size: 0.95rem;">-</p>
+            </div>
+
+            <!-- Button Surat -->
+            <div style="margin-top: 2.25rem; text-align: center;">
+                <button onclick="viewSuratFromStatus()" class="btn btn-primary btn-lg">
+                    <i class="fas fa-file-alt"></i> LIHAT / CETAK SURAT RESIGN
+                </button>
             </div>
         </div>
-    </div>
+
+        <!-- Error Alert -->
+        <div id="error-area" style="display: none; max-width: 600px; margin: 0 auto; background: var(--danger-50); border: 1px solid var(--danger-100); border-radius: var(--radius-md); padding: 1.25rem; text-align: center;">
+            <i class="fas fa-exclamation-circle" style="font-size: 2rem; color: var(--danger-600); margin-bottom: 0.5rem;"></i>
+            <h4 style="color: var(--danger-700); margin-bottom: 0.25rem;">Data Pengajuan Tidak Ditemukan</h4>
+            <p style="color: var(--danger-700); font-size: 0.9rem; margin: 0;">Pastikan Kombinasi NIK dan ID Pengajuan Unik sudah diisi dengan benar.</p>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="container footer-flex">
+            <p>&copy; 2026 PT Mitra Sigma Tekindo. All rights reserved.</p>
+        </div>
+    </footer>
 
     <script src="js/config.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/surat.js"></script>
     <script>
+        let currentStatusData = null;
+
         async function checkStatus() {
-            const nik = document.getElementById('search_nik').value;
-            const idPengajuan = document.getElementById('search_id_pengajuan').value;
-            const errorArea = document.getElementById('error-area');
-            const resultArea = document.getElementById('result-area');
-            
-            errorArea.style.display = 'none';
-            resultArea.style.display = 'none';
+            const nik = document.getElementById('search_nik').value.trim();
+            const idPengajuan = document.getElementById('search_id_pengajuan').value.trim();
 
-            try {
-                // apiCall should be available from app.js
-                const res = await apiCall('checkStatus', { nik, idPengajuan }, 'GET');
-                if (res.success && res.data) {
-                    const data = res.data;
-                    sessionStorage.setItem('resign_data', JSON.stringify(data));
-                    
-                    document.getElementById('result_nama').textContent = data['Nama Lengkap'];
-                    document.getElementById('result_nik').textContent = data['NIK'];
-                    document.getElementById('result_tanggal_pengajuan').textContent = data['Tanggal Pengajuan'];
-                    document.getElementById('result_tanggal_efektif').textContent = data['Tanggal Efektif Resign'];
-                    document.getElementById('result_status').textContent = data['Status Pengajuan'];
-                    document.getElementById('result_nomor_surat').textContent = data['Nomor Surat'] || '-';
-                    
-                    // Reset timeline
-                    document.querySelectorAll('.step-item').forEach(el => {
-                        el.classList.remove('active', 'completed', 'rejected');
-                    });
-                    
-                    const status = data['Status Pengajuan'];
-                    const t1 = document.getElementById('timeline-1');
-                    const t2 = document.getElementById('timeline-2');
-                    const t3 = document.getElementById('timeline-3');
-                    const t4 = document.getElementById('timeline-4');
-                    const rejectArea = document.getElementById('rejection-reason');
-                    rejectArea.style.display = 'none';
+            if (!nik || !idPengajuan) {
+                showToast('NIK dan ID Pengajuan wajib diisi', 'warning');
+                return;
+            }
 
-                    t1.classList.add('completed');
-                    
-                    if (status === 'PENGAJUAN BARU') {
-                        t1.classList.add('active');
-                    } else if (status === 'DIPERIKSA HRD') {
-                        t2.classList.add('active', 'completed');
-                    } else if (status === 'DISETUJUI') {
-                        t2.classList.add('completed');
-                        t3.classList.add('active', 'completed');
-                    } else if (status === 'SELESAI') {
-                        t2.classList.add('completed');
-                        t3.classList.add('completed');
-                        t4.classList.add('active', 'completed');
-                    } else if (status === 'DITOLAK') {
-                        t2.classList.add('completed');
-                        t3.classList.add('rejected');
-                        t3.textContent = 'Ditolak';
-                        rejectArea.style.display = 'block';
-                        rejectArea.textContent = 'Alasan penolakan: ' + (data['Keterangan'] || 'Silakan hubungi HRD');
-                    }
-                    
-                    resultArea.style.display = 'block';
-                } else {
-                    errorArea.textContent = res.message || 'Data tidak ditemukan';
-                    errorArea.style.display = 'block';
+            const response = await apiCall('checkStatus', { nik, idPengajuan }, 'GET');
+
+            if (response.success && response.data) {
+                currentStatusData = response.data;
+                const d = response.data;
+
+                document.getElementById('result_nama').innerText = d['Nama Lengkap'] || '-';
+                document.getElementById('result_nik').innerText = d['NIK'] || '-';
+                document.getElementById('result_nomor_surat').innerText = d['Nomor Surat'] || '-';
+                document.getElementById('result_tanggal_pengajuan').innerText = formatDateLong(d['Tanggal Pengajuan']);
+                document.getElementById('result_tanggal_efektif').innerText = formatDateLong(d['Tanggal Efektif Resign']);
+                
+                const status = d['Status Pengajuan'] || 'PENGAJUAN BARU';
+                const statusBadge = document.getElementById('result_status');
+                statusBadge.innerText = status;
+
+                // Update Timeline Nodes
+                const nodes = [
+                    document.getElementById('timeline-1'),
+                    document.getElementById('timeline-2'),
+                    document.getElementById('timeline-3'),
+                    document.getElementById('timeline-4')
+                ];
+
+                nodes.forEach(n => n.className = 'timeline-node');
+
+                if (status === 'PENGAJUAN BARU') {
+                    statusBadge.className = 'badge badge-baru';
+                    nodes[0].className = 'timeline-node active';
+                } else if (status === 'DIPERIKSA HRD') {
+                    statusBadge.className = 'badge badge-diperiksa';
+                    nodes[0].className = 'timeline-node completed';
+                    nodes[1].className = 'timeline-node active';
+                } else if (status === 'DISETUJUI') {
+                    statusBadge.className = 'badge badge-disetujui';
+                    nodes[0].className = 'timeline-node completed';
+                    nodes[1].className = 'timeline-node completed';
+                    nodes[2].className = 'timeline-node active';
+                } else if (status === 'DITOLAK') {
+                    statusBadge.className = 'badge badge-ditolak';
+                    nodes[0].className = 'timeline-node completed';
+                    nodes[1].className = 'timeline-node rejected';
+                } else if (status === 'SELESAI') {
+                    statusBadge.className = 'badge badge-selesai';
+                    nodes.forEach(n => n.className = 'timeline-node completed');
                 }
-            } catch (err) {
-                errorArea.textContent = 'Terjadi kesalahan sistem';
-                errorArea.style.display = 'block';
+
+                // Show Notes if present
+                const rejBox = document.getElementById('rejection-reason');
+                if (d['Keterangan'] && d['Keterangan'].includes('HRD:')) {
+                    rejBox.style.display = 'block';
+                    document.getElementById('rejection-text').innerText = d['Keterangan'];
+                } else {
+                    rejBox.style.display = 'none';
+                }
+
+                document.getElementById('result-area').style.display = 'block';
+                document.getElementById('error-area').style.display = 'none';
+            } else {
+                document.getElementById('result-area').style.display = 'none';
+                document.getElementById('error-area').style.display = 'block';
+            }
+        }
+
+        function viewSuratFromStatus() {
+            if (currentStatusData) {
+                populateLetterFromApiData(currentStatusData);
+                sessionStorage.setItem('resign_data', JSON.stringify({
+                    idPengajuan: currentStatusData['ID Pengajuan'],
+                    nomorSurat: currentStatusData['Nomor Surat'],
+                    nik: currentStatusData['NIK'],
+                    namaLengkap: currentStatusData['Nama Lengkap'],
+                    jabatan: currentStatusData['Jabatan'],
+                    departemen: currentStatusData['Departemen'],
+                    sektor: currentStatusData['Sektor'],
+                    regu: currentStatusData['Regu'],
+                    tanggalPengajuan: currentStatusData['Tanggal Pengajuan'],
+                    tanggalEfektifResign: currentStatusData['Tanggal Efektif Resign'],
+                    alasanResign: currentStatusData['Alasan Resign'],
+                    status: currentStatusData['Status Pengajuan']
+                }));
+                window.location.href = 'surat.html';
             }
         }
     </script>

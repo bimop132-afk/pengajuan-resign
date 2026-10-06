@@ -3,76 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard HRD</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Dashboard HRD Management - PT Mitra Sigma Tekindo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
-<body>
-    <header class="header" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 30px;">
-        <div>
-            <h2 style="margin: 0;">PT Mitra Sigma Tekindo</h2>
-            <p style="margin: 0;">Dashboard HRD</p>
+<body style="background: var(--bg-body);">
+
+    <!-- Dashboard Header Navigation -->
+    <header class="dashboard-header">
+        <div class="container-wide header-container" style="padding-top: 0.85rem; padding-bottom: 0.85rem;">
+            <a href="dashboard.html" class="brand-logo">
+                <div class="logo-badge"><i class="fas fa-building"></i></div>
+                <div class="brand-text">
+                    <h1>PT Mitra Sigma Tekindo</h1>
+                    <p>Dashboard HRD & Verifikasi Resign</p>
+                </div>
+            </a>
+            <div class="nav-links">
+                <div style="display: flex; align-items: center; gap: 0.75rem; background: rgba(255, 255, 255, 0.1); padding: 0.4rem 1rem; border-radius: var(--radius-full); font-size: 0.88rem; backdrop-filter: blur(10px);">
+                    <i class="fas fa-user-circle" style="font-size: 1.1rem; color: var(--primary-100);"></i>
+                    <span>Admin HRD</span>
+                </div>
+                <button onclick="logout()" class="btn btn-sm btn-secondary" style="background: rgba(225, 29, 72, 0.15); border-color: rgba(225, 29, 72, 0.3); color: #ffffff;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
         </div>
-        <button class="btn btn-danger" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
     </header>
 
-    <div class="container-fluid" style="padding: 20px;">
-        <!-- Stats Row -->
-        <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px;">
-            <div class="card text-center" id="stat-total">
-                <i class="fas fa-users" style="font-size: 2rem; color: #6c757d;"></i>
-                <h3>0</h3><p>Total</p>
+    <main class="container-wide" style="padding-top: 2.25rem; padding-bottom: 4rem;">
+        
+        <!-- ==================== STATS ROW (6 CARDS) ==================== -->
+        <div class="stats-grid-row">
+            <div class="stat-card-modern">
+                <div>
+                    <div class="stat-label">Total Pengajuan</div>
+                    <div id="stat-total" class="stat-value">0</div>
+                </div>
+                <div class="stat-icon-wrapper icon-bg-blue">
+                    <i class="fas fa-folder-open"></i>
+                </div>
             </div>
-            <div class="card text-center" id="stat-baru">
-                <i class="fas fa-file-alt" style="font-size: 2rem; color: #007bff;"></i>
-                <h3>0</h3><p>Baru</p>
+
+            <div class="stat-card-modern">
+                <div>
+                    <div class="stat-label">Pengajuan Baru</div>
+                    <div id="stat-baru" class="stat-value">0</div>
+                </div>
+                <div class="stat-icon-wrapper icon-bg-indigo">
+                    <i class="fas fa-file-export"></i>
+                </div>
             </div>
-            <div class="card text-center" id="stat-diproses">
-                <i class="fas fa-spinner" style="font-size: 2rem; color: #ffc107;"></i>
-                <h3>0</h3><p>Diproses</p>
+
+            <div class="stat-card-modern">
+                <div>
+                    <div class="stat-label">Diperiksa HRD</div>
+                    <div id="stat-diproses" class="stat-value">0</div>
+                </div>
+                <div class="stat-icon-wrapper icon-bg-yellow">
+                    <i class="fas fa-user-clock"></i>
+                </div>
             </div>
-            <div class="card text-center" id="stat-disetujui">
-                <i class="fas fa-thumbs-up" style="font-size: 2rem; color: #28a745;"></i>
-                <h3>0</h3><p>Disetujui</p>
+
+            <div class="stat-card-modern">
+                <div>
+                    <div class="stat-label">Disetujui</div>
+                    <div id="stat-disetujui" class="stat-value">0</div>
+                </div>
+                <div class="stat-icon-wrapper icon-bg-green">
+                    <i class="fas fa-check-circle"></i>
+                </div>
             </div>
-            <div class="card text-center" id="stat-ditolak">
-                <i class="fas fa-times-circle" style="font-size: 2rem; color: #dc3545;"></i>
-                <h3>0</h3><p>Ditolak</p>
+
+            <div class="stat-card-modern">
+                <div>
+                    <div class="stat-label">Ditolak</div>
+                    <div id="stat-ditolak" class="stat-value">0</div>
+                </div>
+                <div class="stat-icon-wrapper icon-bg-red">
+                    <i class="fas fa-times-circle"></i>
+                </div>
             </div>
-            <div class="card text-center" id="stat-selesai">
-                <i class="fas fa-check-double" style="font-size: 2rem; color: #17a2b8;"></i>
-                <h3>0</h3><p>Selesai</p>
+
+            <div class="stat-card-modern">
+                <div>
+                    <div class="stat-label">Selesai</div>
+                    <div id="stat-selesai" class="stat-value">0</div>
+                </div>
+                <div class="stat-icon-wrapper icon-bg-amber">
+                    <i class="fas fa-flag-checkered"></i>
+                </div>
             </div>
         </div>
 
-        <!-- Filters -->
-        <div class="card mb-4">
-            <h4>Filter Data</h4>
-            <div class="form-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); align-items: end;">
+        <!-- ==================== FILTER BAR CARD ==================== -->
+        <div class="filter-bar-card">
+            <div style="margin-bottom: 1rem; font-weight: 700; font-size: 1.05rem; color: var(--gray-900); display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-filter text-primary"></i> Pencarian & Filter Multi-Kolom
+            </div>
+
+            <div class="filter-grid-layout">
                 <div class="form-group">
-                    <label>NIK</label>
-                    <input type="text" id="filter-nik" class="form-control filter-input">
+                    <label class="form-label" for="filter-nik">Search NIK</label>
+                    <input type="text" id="filter-nik" class="form-control filter-input" placeholder="Cari NIK...">
                 </div>
+
                 <div class="form-group">
-                    <label>Nama</label>
-                    <input type="text" id="filter-nama" class="form-control filter-input">
+                    <label class="form-label" for="filter-nama">Search Nama</label>
+                    <input type="text" id="filter-nama" class="form-control filter-input" placeholder="Cari nama...">
                 </div>
+
                 <div class="form-group">
-                    <label>Departemen</label>
-                    <select id="filter-departemen" class="form-control filter-input"><option value="">Semua</option></select>
+                    <label class="form-label" for="filter-sektor">Sektor</label>
+                    <select id="filter-sektor" class="form-select filter-input">
+                        <option value="">Semua Sektor</option>
+                    </select>
                 </div>
+
                 <div class="form-group">
-                    <label>Sektor</label>
-                    <select id="filter-sektor" class="form-control filter-input"><option value="">Semua</option></select>
+                    <label class="form-label" for="filter-regu">Regu</label>
+                    <select id="filter-regu" class="form-select filter-input">
+                        <option value="">Semua Regu</option>
+                    </select>
                 </div>
+
                 <div class="form-group">
-                    <label>Regu</label>
-                    <select id="filter-regu" class="form-control filter-input"><option value="">Semua</option></select>
+                    <label class="form-label" for="filter-departemen">Departemen</label>
+                    <select id="filter-departemen" class="form-select filter-input">
+                        <option value="">Semua Departemen</option>
+                    </select>
                 </div>
+
                 <div class="form-group">
-                    <label>Status</label>
-                    <select id="filter-status" class="form-control filter-input">
+                    <label class="form-label" for="filter-status">Status Pengajuan</label>
+                    <select id="filter-status" class="form-select filter-input">
                         <option value="">Semua Status</option>
                         <option value="PENGAJUAN BARU">PENGAJUAN BARU</option>
                         <option value="DIPERIKSA HRD">DIPERIKSA HRD</option>
@@ -81,96 +147,124 @@
                         <option value="SELESAI">SELESAI</option>
                     </select>
                 </div>
+
                 <div class="form-group">
-                    <label>Tgl Pengajuan Dari</label>
+                    <label class="form-label" for="filter-tgl-dari">Tgl Pengajuan (Dari)</label>
                     <input type="date" id="filter-tgl-dari" class="form-control filter-input">
                 </div>
+
                 <div class="form-group">
-                    <label>Tgl Pengajuan Sampai</label>
+                    <label class="form-label" for="filter-tgl-sampai">Tgl Pengajuan (Sampai)</label>
                     <input type="date" id="filter-tgl-sampai" class="form-control filter-input">
                 </div>
-                <div class="form-group">
-                    <label>Tgl Efektif Dari</label>
-                    <input type="date" id="filter-tgl-efektif-dari" class="form-control filter-input">
-                </div>
-                <div class="form-group">
-                    <label>Tgl Efektif Sampai</label>
-                    <input type="date" id="filter-tgl-efektif-sampai" class="form-control filter-input">
-                </div>
-                <div class="form-group" style="display: flex; gap: 10px;">
-                    <button class="btn btn-primary" onclick="applyFilters()">Terapkan</button>
-                    <button class="btn btn-secondary" onclick="resetFilters()">Reset</button>
+
+                <div style="display: flex; gap: 0.5rem; grid-column: span 2;">
+                    <button onclick="applyFilters()" class="btn btn-primary" style="flex: 1;">
+                        <i class="fas fa-search"></i> Filter
+                    </button>
+                    <button onclick="resetFilters()" class="btn btn-secondary" style="flex: 1;">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- Data Table -->
-        <div class="card" style="overflow-x: auto;">
-            <table class="table" style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="background: #f4f6f9; text-align: left;">
-                        <th>ID Pengajuan</th>
-                        <th>NIK</th>
-                        <th>Nama</th>
-                        <th>Jabatan</th>
-                        <th>Sektor</th>
-                        <th>Regu</th>
-                        <th>Tgl Pengajuan</th>
-                        <th>Tgl Efektif</th>
-                        <th>Status</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body">
-                    <!-- Populated by JS -->
-                </tbody>
-            </table>
-            <div id="pagination" class="mt-3 text-center"></div>
-        </div>
-    </div>
+        <!-- ==================== DATA TABLE CARD ==================== -->
+        <div class="table-card-wrapper">
+            <div class="table-responsive">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>ID Pengajuan</th>
+                            <th>NIK</th>
+                            <th>Nama Karyawan</th>
+                            <th>Jabatan</th>
+                            <th>Sektor</th>
+                            <th>Regu</th>
+                            <th>Tgl Pengajuan</th>
+                            <th>Tgl Efektif</th>
+                            <th>Status</th>
+                            <th style="text-align: center;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Populated dynamically via js/dashboard.js -->
+                    </tbody>
+                </table>
+            </div>
 
-    <!-- Detail Modal -->
+            <!-- Pagination Controls -->
+            <div class="pagination-container">
+                <div style="font-size: 0.88rem; color: var(--gray-600);">
+                    Menampilkan data pengajuan resign karyawan
+                </div>
+                <div id="pagination" class="pagination-btns">
+                    <!-- Pagination buttons generated by dashboard.js -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ==================== MODAL DETAIL PENGAJUAN ==================== -->
     <div id="detail-modal" class="modal">
-        <div class="modal-content" style="max-width: 600px;">
-            <h3>Detail Pengajuan</h3>
-            <div id="detail-content" style="margin-top: 15px;"></div>
-            <div class="modal-actions mt-4 text-right">
-                <button class="btn btn-secondary" onclick="closeDetailModal()">Tutup</button>
+        <div class="modal-card" style="max-width: 680px;">
+            <div class="modal-card-header">
+                <h3 style="margin: 0; font-size: 1.15rem;"><i class="fas fa-file-alt text-primary"></i> Detail Pengajuan Resign</h3>
+                <button onclick="closeDetailModal()" style="background: none; border: none; font-size: 1.25rem; color: var(--gray-400); cursor: pointer;">&times;</button>
+            </div>
+            <div class="modal-card-body" id="detail-content">
+                <!-- Content injected dynamically -->
+            </div>
+            <div class="modal-card-footer">
+                <button onclick="closeDetailModal()" class="btn btn-secondary">Tutup</button>
             </div>
         </div>
     </div>
 
-    <!-- Status Modal -->
+    <!-- ==================== MODAL UBAH STATUS ==================== -->
     <div id="status-modal" class="modal">
-        <div class="modal-content">
-            <h3>Update Status Pengajuan</h3>
-            <input type="hidden" id="status-id-pengajuan">
-            <div class="form-group mt-3">
-                <label>Status Baru</label>
-                <select id="status-select" class="form-control">
-                    <option value="PENGAJUAN BARU">PENGAJUAN BARU</option>
-                    <option value="DIPERIKSA HRD">DIPERIKSA HRD</option>
-                    <option value="DISETUJUI">DISETUJUI</option>
-                    <option value="DITOLAK">DITOLAK</option>
-                    <option value="SELESAI">SELESAI</option>
-                </select>
+        <div class="modal-card" style="max-width: 480px;">
+            <div class="modal-card-header">
+                <h3 style="margin: 0; font-size: 1.15rem;"><i class="fas fa-edit text-primary"></i> Update Status Pengajuan</h3>
+                <button onclick="closeStatusModal()" style="background: none; border: none; font-size: 1.25rem; color: var(--gray-400); cursor: pointer;">&times;</button>
             </div>
-            <div class="form-group mt-3">
-                <label>Catatan / Nomor Surat (jika disetujui)</label>
-                <textarea id="status-catatan" class="form-control" rows="3"></textarea>
+            <div class="modal-card-body">
+                <input type="hidden" id="status-id-pengajuan">
+                
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                    <label class="form-label" for="status-select">Pilih Status Baru <span class="required">*</span></label>
+                    <select id="status-select" class="form-select">
+                        <option value="PENGAJUAN BARU">PENGAJUAN BARU</option>
+                        <option value="DIPERIKSA HRD">DIPERIKSA HRD</option>
+                        <option value="DISETUJUI">DISETUJUI</option>
+                        <option value="DITOLAK">DITOLAK</option>
+                        <option value="SELESAI">SELESAI</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="status-catatan">Catatan HRD (Opsional)</label>
+                    <textarea id="status-catatan" class="form-control" placeholder="Tuliskan catatan verifikasi atau alasan jika ditolak..."></textarea>
+                </div>
             </div>
-            <div class="modal-actions mt-4 text-right" style="display: flex; justify-content: flex-end; gap: 10px;">
-                <button class="btn btn-secondary" onclick="closeStatusModal()">Batal</button>
-                <button class="btn btn-primary" onclick="updateStatus()">Simpan</button>
+            <div class="modal-card-footer">
+                <button onclick="closeStatusModal()" class="btn btn-secondary">BATAL</button>
+                <button onclick="updateStatus()" class="btn btn-primary">SIMPAN STATUS</button>
             </div>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <footer>
+        <div class="container-wide footer-flex">
+            <p>&copy; 2026 PT Mitra Sigma Tekindo. All rights reserved.</p>
+        </div>
+    </footer>
+
     <script src="js/config.js"></script>
     <script src="js/app.js"></script>
     <script src="js/auth.js"></script>
-    <script src="js/surat.js"></script>
     <script src="js/dashboard.js"></script>
+    <script src="js/surat.js"></script>
 </body>
 </html>

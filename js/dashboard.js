@@ -10,6 +10,7 @@ async function loadDashboardData() {
         if (response.success) {
             dashboardData = response.data || [];
             updateStats(dashboardData);
+            populateDropdownFilters(dashboardData);
             applyFilters();
         } else if (response.message === 'Token invalid') {
             logout();
@@ -28,6 +29,26 @@ function updateStats(data) {
     document.getElementById('stat-selesai').innerText = data.filter(d => d['Status Pengajuan'] === 'SELESAI').length;
 }
 
+function populateDropdownFilters(data) {
+    const sektors = [...new Set(data.map(d => d['Sektor']).filter(Boolean))];
+    const regus = [...new Set(data.map(d => d['Regu']).filter(Boolean))];
+    const depts = [...new Set(data.map(d => d['Departemen']).filter(Boolean))];
+
+    const selSektor = document.getElementById('filter-sektor');
+    const selRegu = document.getElementById('filter-regu');
+    const selDept = document.getElementById('filter-departemen');
+
+    if (selSektor) {
+        selSektor.innerHTML = '<option value="">Semua Sektor</option>' + sektors.map(s => `<option value="${s}">${s}</option>`).join('');
+    }
+    if (selRegu) {
+        selRegu.innerHTML = '<option value="">Semua Regu</option>' + regus.map(r => `<option value="${r}">${r}</option>`).join('');
+    }
+    if (selDept) {
+        selDept.innerHTML = '<option value="">Semua Departemen</option>' + depts.map(d => `<option value="${d}">${d}</option>`).join('');
+    }
+}
+
 function applyFilters() {
     const fNik = (document.getElementById('filter-nik').value || '').toLowerCase();
     const fNama = (document.getElementById('filter-nama').value || '').toLowerCase();
@@ -37,8 +58,6 @@ function applyFilters() {
     const fStatus = document.getElementById('filter-status').value;
     const fTglDari = document.getElementById('filter-tgl-dari').value;
     const fTglSampai = document.getElementById('filter-tgl-sampai').value;
-    const fEfektifDari = document.getElementById('filter-tgl-efektif-dari').value;
-    const fEfektifSampai = document.getElementById('filter-tgl-efektif-sampai').value;
 
     filteredData = dashboardData.filter(item => {
         let match = true;
@@ -52,10 +71,6 @@ function applyFilters() {
         const tglPengajuan = item['Tanggal Pengajuan'] ? item['Tanggal Pengajuan'].split('T')[0] : '';
         if (fTglDari && tglPengajuan < fTglDari) match = false;
         if (fTglSampai && tglPengajuan > fTglSampai) match = false;
-
-        const tglEfektif = item['Tanggal Efektif Resign'] ? item['Tanggal Efektif Resign'].split('T')[0] : '';
-        if (fEfektifDari && tglEfektif < fEfektifDari) match = false;
-        if (fEfektifSampai && tglEfektif > fEfektifSampai) match = false;
 
         return match;
     });
@@ -74,7 +89,7 @@ function renderTable(data) {
     tbody.innerHTML = '';
     
     if (data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">Tidak ada data</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted" style="padding: 2.5rem 1rem;">Tidak ada data pengajuan resign yang cocok.</td></tr>';
         renderPagination(0);
         return;
     }
@@ -83,7 +98,7 @@ function renderTable(data) {
     const paginatedItems = data.slice(startIndex, startIndex + itemsPerPage);
 
     paginatedItems.forEach(item => {
-        let badgeClass = '';
+        let badgeClass = 'badge-baru';
         switch(item['Status Pengajuan']) {
             case 'PENGAJUAN BARU': badgeClass = 'badge-baru'; break;
             case 'DIPERIKSA HRD': badgeClass = 'badge-diperiksa'; break;
@@ -94,20 +109,21 @@ function renderTable(data) {
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td>${item['ID Pengajuan']}</td>
-            <td>${item['NIK']}</td>
-            <td>${item['Nama Lengkap']}</td>
-            <td>${item['Jabatan']}</td>
-            <td>${item['Sektor']}</td>
-            <td>${item['Regu']}</td>
+            <td><strong style="color: var(--primary-600);">${item['ID Pengajuan'] || '-'}</strong></td>
+            <td>${item['NIK'] || '-'}</td>
+            <td><strong style="color: var(--gray-900);">${item['Nama Lengkap'] || '-'}</strong></td>
+            <td>${item['Jabatan'] || '-'}</td>
+            <td>${item['Sektor'] || '-'}</td>
+            <td>${item['Regu'] || '-'}</td>
             <td>${formatDate(item['Tanggal Pengajuan'])}</td>
-            <td>${formatDate(item['Tanggal Efektif Resign'])}</td>
-            <td><span class="badge ${badgeClass}">${item['Status Pengajuan']}</span></td>
+            <td><strong style="color: var(--danger-600);">${formatDate(item['Tanggal Efektif Resign'])}</strong></td>
+            <td><span class="badge ${badgeClass}">${item['Status Pengajuan'] || 'PENGAJUAN BARU'}</span></td>
             <td>
-                <button onclick="showDetail('${item['ID Pengajuan']}')">Detail</button>
-                <button onclick="showStatusModal('${item['ID Pengajuan']}', '${item['Status Pengajuan']}')">Ubah Status</button>
-                <button onclick="viewSurat('${item['ID Pengajuan']}')">Lihat Surat</button>
-                <button onclick="printSurat('${item['ID Pengajuan']}')">Cetak</button>
+                <div style="display: flex; gap: 0.35rem; justify-content: center;">
+                    <button onclick="showDetail('${item['ID Pengajuan']}')" class="btn btn-sm btn-info" title="Detail Pengajuan"><i class="fas fa-eye"></i></button>
+                    <button onclick="showStatusModal('${item['ID Pengajuan']}', '${item['Status Pengajuan']}')" class="btn btn-sm btn-warning" title="Update Status"><i class="fas fa-edit"></i></button>
+                    <button onclick="viewSurat('${item['ID Pengajuan']}')" class="btn btn-sm btn-primary" title="Lihat Surat"><i class="fas fa-file-alt"></i></button>
+                </div>
             </td>
         `;
         tbody.appendChild(tr);
@@ -121,12 +137,12 @@ function renderPagination(totalItems) {
     pagination.innerHTML = '';
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     
-    if(totalPages <= 1) return;
+    if (totalPages <= 1) return;
 
     for (let i = 1; i <= totalPages; i++) {
         const btn = document.createElement('button');
         btn.innerText = i;
-        if (i === currentPage) btn.className = 'active';
+        btn.className = `pagination-btn ${i === currentPage ? 'active' : ''}`;
         btn.onclick = () => goToPage(i);
         pagination.appendChild(btn);
     }
@@ -141,9 +157,11 @@ function showDetail(id) {
     const item = dashboardData.find(d => d['ID Pengajuan'] === id);
     if (!item) return;
 
-    let html = '<table class="detail-table">';
+    let html = '<table class="modern-table" style="font-size: 0.9rem;">';
     for (const key in item) {
-        html += `<tr><th>${key}</th><td>${item[key] || '-'}</td></tr>`;
+        let val = item[key] || '-';
+        if (key.includes('Tanggal')) val = formatDate(val);
+        html += `<tr><th style="width: 38%; background: var(--gray-50);">${key}</th><td>${val}</td></tr>`;
     }
     html += '</table>';
     
@@ -157,7 +175,7 @@ function closeDetailModal() {
 
 function showStatusModal(id, status) {
     document.getElementById('status-id-pengajuan').value = id;
-    document.getElementById('status-select').value = status;
+    document.getElementById('status-select').value = status || 'PENGAJUAN BARU';
     document.getElementById('status-catatan').value = '';
     document.getElementById('status-modal').style.display = 'flex';
 }
@@ -171,7 +189,7 @@ async function updateStatus() {
     const status = document.getElementById('status-select').value;
     const catatan = document.getElementById('status-catatan').value;
     
-    showLoading('Memperbarui status...');
+    showLoading('Memperbarui status pengajuan...');
     try {
         const response = await apiCall('updateStatus', {
             idPengajuan,
@@ -185,10 +203,10 @@ async function updateStatus() {
             closeStatusModal();
             loadDashboardData();
         } else {
-            showToast(response.message || 'Gagal memperbarui', 'error');
+            showToast(response.message || 'Gagal memperbarui status', 'error');
         }
     } catch (e) {
-        showToast('Terjadi kesalahan', 'error');
+        showToast('Terjadi kesalahan koneksi', 'error');
     } finally {
         hideLoading();
     }
@@ -217,7 +235,7 @@ function viewSurat(id) {
 }
 
 function printSurat(id) {
-    viewSurat(id); // viewSurat opens it. In a real app, might want to trigger print there.
+    viewSurat(id);
 }
 
 function startAutoRefresh() {

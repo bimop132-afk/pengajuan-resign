@@ -3,103 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pengajuan Berhasil</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Pengajuan Berhasil - PT Mitra Sigma Tekindo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
-<body>
-    <div class="container text-center">
-        <div class="card mt-5">
-            <div class="success-icon mb-4 text-success" style="font-size: 4rem;">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <h2>PENGAJUAN BERHASIL</h2>
-            <p class="mb-4">Terima kasih, pengajuan resign Anda telah berhasil dikirim dan akan segera diproses oleh HRD.</p>
+<body style="background: var(--gray-100);">
+
+    <header class="main-header">
+        <div class="container header-container">
+            <a href="index.html" class="brand-logo">
+                <div class="logo-badge"><i class="fas fa-building"></i></div>
+                <div class="brand-text">
+                    <h1>PT Mitra Sigma Tekindo</h1>
+                    <p>Human Resources Portal</p>
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <main class="container" style="padding-top: 3rem; padding-bottom: 4rem;">
+        
+        <div class="card text-center" style="max-width: 680px; margin: 0 auto; padding: 3rem 2.5rem;">
             
-            <div class="detail-card text-left p-4 mb-4" style="background: #f8f9fa; border-radius: 8px;">
-                <h4>Detail Pengajuan</h4>
-                <div class="grid" style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin-top: 15px;">
-                    <strong>ID Pengajuan:</strong> <span id="detail_id_pengajuan"></span>
-                    <strong>Nama:</strong> <span id="detail_nama"></span>
-                    <strong>Tgl Pengajuan:</strong> <span id="detail_tanggal_pengajuan"></span>
-                    <strong>Tgl Efektif:</strong> <span id="detail_tanggal_efektif"></span>
-                    <strong>Status:</strong> <span id="detail_status" class="badge"></span>
-                    <strong>Nomor Surat:</strong> <span id="detail_nomor_surat"></span>
+            <!-- Success Icon Badge -->
+            <div style="width: 80px; height: 80px; background: var(--success-50); color: var(--success-600); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.75rem; margin: 0 auto 1.5rem; box-shadow: 0 0 0 10px var(--success-100);">
+                <i class="fas fa-check"></i>
+            </div>
+
+            <h2 style="font-size: 2rem; color: var(--gray-900); margin-bottom: 0.5rem;">PENGAJUAN BERHASIL</h2>
+            <p style="color: var(--gray-600); font-size: 1.05rem; margin-bottom: 2rem;">
+                Pengajuan resign Anda telah berhasil dikirim ke database HRD PT Mitra Sigma Tekindo.
+            </p>
+
+            <!-- Ringkasan Data Card -->
+            <div style="background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 1.5rem; text-align: left; margin-bottom: 2rem;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.5rem; font-size: 0.95rem;">
+                    <div>
+                        <span style="color: var(--gray-500); font-size: 0.8rem; text-transform: uppercase; font-weight: 700;">ID Pengajuan</span>
+                        <div id="detail_id_pengajuan" style="font-weight: 800; color: var(--primary-600); font-size: 1.1rem;">-</div>
+                    </div>
+                    <div>
+                        <span style="color: var(--gray-500); font-size: 0.8rem; text-transform: uppercase; font-weight: 700;">Nomor Surat</span>
+                        <div id="detail_nomor_surat" style="font-weight: 700; color: var(--gray-800);">-</div>
+                    </div>
+                    <div>
+                        <span style="color: var(--gray-500); font-size: 0.8rem; text-transform: uppercase; font-weight: 700;">Nama Karyawan</span>
+                        <div id="detail_nama" style="font-weight: 700; color: var(--gray-900);">-</div>
+                    </div>
+                    <div>
+                        <span style="color: var(--gray-500); font-size: 0.8rem; text-transform: uppercase; font-weight: 700;">Status Pengajuan</span>
+                        <div><span id="detail_status" class="badge badge-baru">PENGAJUAN BARU</span></div>
+                    </div>
+                    <div>
+                        <span style="color: var(--gray-500); font-size: 0.8rem; text-transform: uppercase; font-weight: 700;">Tanggal Pengajuan</span>
+                        <div id="detail_tanggal_pengajuan" style="font-weight: 600; color: var(--gray-800);">-</div>
+                    </div>
+                    <div>
+                        <span style="color: var(--gray-500); font-size: 0.8rem; text-transform: uppercase; font-weight: 700;">Tanggal Efektif Resign</span>
+                        <div id="detail_tanggal_efektif" style="font-weight: 700; color: var(--danger-600);">-</div>
+                    </div>
                 </div>
             </div>
 
-            <p class="alert alert-info">Silakan simpan atau cetak surat resign ini sebagai bukti pengajuan.</p>
-            
-            <div class="action-buttons mt-4" style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
-                <button class="btn btn-primary" onclick="viewSurat()"><i class="fas fa-eye"></i> LIHAT SURAT RESIGN</button>
-                <button class="btn btn-secondary" onclick="printSurat()"><i class="fas fa-print"></i> CETAK SURAT</button>
-                <button class="btn btn-success" onclick="downloadPDF()"><i class="fas fa-file-pdf"></i> SIMPAN PDF</button>
+            <!-- Callout Alert -->
+            <div style="background: var(--info-50); border: 1px solid rgba(2, 132, 199, 0.2); border-radius: var(--radius-md); padding: 1.15rem; text-align: left; margin-bottom: 2rem; display: flex; gap: 1rem; align-items: flex-start;">
+                <i class="fas fa-info-circle" style="color: var(--info-600); font-size: 1.35rem; margin-top: 2px;"></i>
+                <p style="margin: 0; color: var(--info-700); font-size: 0.92rem; line-height: 1.5;">
+                    Pengajuan resign berhasil dikirim. Silakan cetak atau unduh <strong>Surat Pengajuan Resign</strong> di bawah ini dan serahkan kepada HRD untuk proses selanjutnya.
+                </p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                <button onclick="viewSurat()" class="btn btn-primary btn-lg">
+                    <i class="fas fa-file-alt"></i> LIHAT SURAT RESIGN
+                </button>
+                <button onclick="printSurat()" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-print"></i> CETAK SURAT
+                </button>
+                <button onclick="downloadPDF()" class="btn btn-success btn-lg">
+                    <i class="fas fa-file-pdf"></i> SIMPAN PDF
+                </button>
+            </div>
+
+            <div>
+                <a href="index.html" class="text-muted" style="font-size: 0.9rem; font-weight: 600;">
+                    <i class="fas fa-home"></i> Kembali ke Beranda Utama
+                </a>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Hidden Printable Document Template Container -->
+    <div style="display: none;">
+        <div class="letter-paper" id="surat-container">
+            <div class="letter-company-header">
+                <h1>PT MITRA SIGMA TEKINDO</h1>
+                <p>Jl. Perusahaan No. 123, Majalengka, Jawa Barat | Email: hrd@mitrasigmatekindo.co.id</p>
             </div>
             
-            <div class="mt-4">
-                <a href="index.html" class="btn btn-link">Kembali ke Beranda</a>
+            <div class="letter-doc-title">SURAT PENGAJUAN RESIGN</div>
+            <div class="letter-doc-no">Nomor: <span id="surat-nomor">-</span></div>
+
+            <p style="margin-bottom: 1.5rem;">
+                Kepada Yth.<br>
+                <strong>HRD PT Mitra Sigma Tekindo</strong><br>
+                di Tempat
+            </p>
+
+            <p>Dengan hormat,</p>
+            <p>Saya yang bertanda tangan di bawah ini:</p>
+
+            <table class="letter-table-details">
+                <tr><td>Nama Lengkap</td><td>:</td><td><strong id="surat-nama">-</strong></td></tr>
+                <tr><td>NIK</td><td>:</td><td id="surat-nik">-</td></tr>
+                <tr><td>Jabatan</td><td>:</td><td id="surat-jabatan">-</td></tr>
+                <tr><td>Departemen</td><td>:</td><td id="surat-departemen">-</td></tr>
+                <tr><td>Sektor</td><td>:</td><td id="surat-sektor">-</td></tr>
+                <tr><td>Regu</td><td>:</td><td id="surat-regu">-</td></tr>
+            </table>
+
+            <p style="margin-top: 1.5rem;">
+                Dengan ini mengajukan permohonan pengunduran diri dari PT Mitra Sigma Tekindo, terhitung efektif mulai tanggal:
+            </p>
+
+            <p style="text-align: center; margin: 1.25rem 0;">
+                <strong style="font-size: 1.15rem; text-decoration: underline;" id="surat-tanggal-efektif">-</strong>
+            </p>
+
+            <p>Adapun alasan pengunduran diri saya adalah:</p>
+
+            <p style="padding-left: 1.5rem;">
+                <strong id="surat-alasan">-</strong>
+            </p>
+
+            <p style="margin-top: 1.5rem;">
+                Demikian surat pengajuan resign ini saya buat dengan sebenar-benarnya dan tanpa adanya paksaan dari pihak manapun. 
+                Saya mengucapkan terima kasih atas kesempatan dan pengalaman yang telah diberikan selama bekerja di PT Mitra Sigma Tekindo.
+            </p>
+
+            <div class="letter-signature-section">
+                <p>Majalengka, <span id="surat-tanggal-pengajuan">-</span></p>
+                <p>Hormat saya,</p>
+                <div class="letter-signature-space"></div>
+                <div class="letter-signature-name" id="surat-ttd-nama">-</div>
+                <div>NIK. <span id="surat-ttd-nik">-</span></div>
             </div>
+            <div style="clear: both;"></div>
         </div>
     </div>
 
-    <!-- Hidden Container for PDF/Print -->
-    <div id="surat-container" style="display: none; padding: 20mm; background: white; color: black; font-family: 'Times New Roman', Times, serif; line-height: 1.5;">
-        <div style="text-align: center; margin-bottom: 20px;">
-            <h2 style="margin: 0;"><strong>PT MITRA SIGMA TEKINDO</strong></h2>
-            <hr style="border: 1px solid black;">
+    <footer>
+        <div class="container footer-flex">
+            <p>&copy; 2026 PT Mitra Sigma Tekindo. All rights reserved.</p>
         </div>
-        
-        <div style="text-align: center; margin-bottom: 30px;">
-            <h3 style="margin: 0; text-decoration: underline;">SURAT PENGAJUAN RESIGN</h3>
-            <p style="margin: 0;">Nomor: <span id="surat-nomor"></span></p>
-        </div>
+    </footer>
 
-        <p>Kepada Yth. HRD PT Mitra Sigma Tekindo di Tempat</p>
-        <p>Dengan hormat,</p>
-        <p>Saya yang bertanda tangan di bawah ini:</p>
-        <table style="width: 100%; margin-left: 20px; margin-bottom: 20px;">
-            <tr><td style="width: 150px;">Nama</td><td>: <span id="surat-nama"></span></td></tr>
-            <tr><td>NIK</td><td>: <span id="surat-nik"></span></td></tr>
-            <tr><td>Jabatan</td><td>: <span id="surat-jabatan"></span></td></tr>
-            <tr><td>Departemen</td><td>: <span id="surat-departemen"></span></td></tr>
-            <tr><td>Sektor</td><td>: <span id="surat-sektor"></span></td></tr>
-            <tr><td>Regu</td><td>: <span id="surat-regu"></span></td></tr>
-        </table>
-        
-        <p>Dengan ini mengajukan permohonan pengunduran diri dari PT Mitra Sigma Tekindo, terhitung efektif mulai tanggal: <strong id="surat-tanggal-efektif"></strong></p>
-        <p>Adapun alasan pengunduran diri saya adalah: <strong id="surat-alasan"></strong></p>
-        <p>Demikian surat pengajuan pengunduran diri ini saya buat dengan sebenar-benarnya tanpa ada paksaan dari pihak manapun.</p>
-        
-        <div style="margin-top: 50px; text-align: right;">
-            <p>Majalengka, <span id="surat-tanggal-pengajuan"></span></p>
-            <p>Hormat saya,</p>
-            <br><br><br>
-            <p><strong id="surat-ttd-nama"></strong><br>NIK. <span id="surat-ttd-nik"></span></p>
-        </div>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="js/config.js"></script>
     <script src="js/app.js"></script>
     <script src="js/surat.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const data = JSON.parse(sessionStorage.getItem('resign_data') || '{}');
-            if (data.idPengajuan) {
-                document.getElementById('detail_id_pengajuan').textContent = data.idPengajuan;
-                document.getElementById('detail_nama').textContent = data['Nama Lengkap'] || data.nama_lengkap;
-                document.getElementById('detail_tanggal_pengajuan').textContent = data['Tanggal Pengajuan'] || data.tanggal_pengajuan;
-                document.getElementById('detail_tanggal_efektif').textContent = data['Tanggal Efektif Resign'] || data.tanggal_efektif_resign;
-                document.getElementById('detail_status').textContent = data['Status Pengajuan'] || 'PENGAJUAN BARU';
-                document.getElementById('detail_nomor_surat').textContent = data['Nomor Surat'] || '-';
-                
-                if (typeof populateSurat === 'function') {
-                    populateSurat(data);
-                }
-            }
-        });
-        function viewSurat() { window.location.href = 'surat.html'; }
-    </script>
 </body>
 </html>
