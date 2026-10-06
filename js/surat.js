@@ -68,25 +68,57 @@ function printLetter() {
     window.print();
 }
 
-function downloadPDF() {
+async function downloadPDF() {
     const el = document.getElementById('surat-container');
     if (!el) return;
     
     const nama = document.getElementById('surat-nama') ? document.getElementById('surat-nama').innerText.replace(/\s+/g, '_').toUpperCase() : 'NAMA';
     const nik = document.getElementById('surat-nik') ? document.getElementById('surat-nik').innerText : 'NIK';
     
-    const opt = {
-        margin: [10, 15, 10, 15],
-        filename: `SURAT_RESIGN_${nik}_${nama}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-    
-    if (typeof html2pdf !== 'undefined') {
-        html2pdf().set(opt).from(el).save();
-    } else {
-        alert("html2pdf library not loaded.");
+    if (typeof html2canvas === 'undefined' || !window.jspdf || !window.jspdf.jsPDF) {
+        alert('Library PDF belum termuat. Silakan muat ulang halaman lalu coba kembali.');
+        return;
+    }
+
+    // Render a visible, off-screen copy. This also lets the button on success.html
+    // export its otherwise hidden letter template correctly.
+    const exportLetter = el.cloneNode(true);
+    exportLetter.removeAttribute('id');
+    exportLetter.classList.add('pdf-letter-export');
+    document.body.appendChild(exportLetter);
+
+    try {
+        const canvas = await html2canvas(exportLetter, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#ffffff',
+            windowWidth: exportLetter.scrollWidth,
+            windowHeight: exportLetter.scrollHeight
+        });
+
+        const pdf = new window.jspdf.jsPDF({
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait'
+        });
+        const pageWidth = 210;
+        const pageHeight = 297;
+        const margin = 10;
+        const maxWidth = pageWidth - (margin * 2);
+        const maxHeight = pageHeight - (margin * 2);
+        const imageRatio = canvas.width / canvas.height;
+        const imageWidth = Math.min(maxWidth, maxHeight * imageRatio);
+        const imageHeight = imageWidth / imageRatio;
+        const x = (pageWidth - imageWidth) / 2;
+        const y = (pageHeight - imageHeight) / 2;
+
+        pdf.addImage(canvas.toDataURL('image/jpeg', 0.98), 'JPEG', x, y, imageWidth, imageHeight);
+        pdf.save(`SURAT_RESIGN_${nik}_${nama}.pdf`);
+    } catch (error) {
+        console.error('Gagal membuat PDF surat:', error);
+        alert('PDF gagal dibuat. Silakan coba kembali.');
+    } finally {
+        exportLetter.remove();
     }
 }
 

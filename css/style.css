@@ -1092,11 +1092,11 @@ textarea.form-control {
     width: 210mm;
     min-height: 297mm;
     margin: 0 auto;
-    padding: 25mm 20mm;
+    padding: 20mm 18mm;
     box-shadow: var(--shadow-xl);
     font-family: var(--font-serif);
-    font-size: 11pt;
-    line-height: 1.6;
+    font-size: 10.5pt;
+    line-height: 1.45;
     color: #111111;
     box-sizing: border-box;
 }
@@ -1104,8 +1104,8 @@ textarea.form-control {
 .letter-company-header {
     text-align: center;
     border-bottom: 3px double #000000;
-    padding-bottom: 1rem;
-    margin-bottom: 1.75rem;
+    padding-bottom: 0.65rem;
+    margin-bottom: 1.25rem;
 }
 
 .letter-company-header h1 {
@@ -1137,17 +1137,21 @@ textarea.form-control {
     text-align: center;
     font-family: var(--font-sans);
     font-size: 10pt;
-    margin-bottom: 2rem;
+    margin-bottom: 1.25rem;
+}
+
+.letter-paper p {
+    margin-bottom: 0.6rem;
 }
 
 .letter-table-details {
     width: 100%;
-    margin: 1.25rem 0;
+    margin: 0.85rem 0;
     border-collapse: collapse;
 }
 
 .letter-table-details td {
-    padding: 0.35rem 0;
+    padding: 0.22rem 0;
     vertical-align: top;
 }
 
@@ -1155,14 +1159,26 @@ textarea.form-control {
 .letter-table-details td:nth-child(2) { width: 15px; }
 
 .letter-signature-section {
-    margin-top: 3.5rem;
+    margin-top: 1.75rem;
     float: right;
     width: 220px;
     text-align: center;
 }
 
 .letter-signature-space {
-    height: 75px;
+    height: 55px;
+}
+
+/* Temporary, off-screen copy used when exporting with html2canvas. */
+.pdf-letter-export {
+    position: fixed !important;
+    top: 0 !important;
+    left: -10000px !important;
+    display: block !important;
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 0 !important;
+    box-shadow: none !important;
 }
 
 .letter-signature-name {
@@ -1182,7 +1198,7 @@ textarea.form-control {
         box-shadow: none;
         margin: 0;
         width: 100%;
-        padding: 15mm 15mm;
+        padding: 18mm 18mm;
     }
 }
 
