@@ -1126,21 +1126,10 @@ textarea.form-control {
 
 .letter-company-logo {
     display: block;
-    width: 235px;
+    width: 255px;
     max-width: 100%;
     height: auto;
     margin: 0 auto 0.45rem;
-}
-
-.letter-company-logo-panel {
-    display: inline-block;
-    background: #111111;
-    padding: 0.35rem 0.75rem;
-    margin-bottom: 0.45rem;
-}
-
-.letter-company-logo-panel .letter-company-logo {
-    margin: 0;
 }
 
 @media (max-width: 600px) {
@@ -1217,7 +1206,18 @@ textarea.form-control {
     text-decoration: underline;
 }
 
+@page {
+    size: A4 portrait;
+    margin: 0;
+}
+
 @media print {
+    html, body {
+        width: 210mm;
+        height: 297mm;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
     .letter-toolbar, .main-header, footer {
         display: none !important;
     }
@@ -1226,10 +1226,15 @@ textarea.form-control {
         padding: 0;
     }
     .letter-paper {
-        box-shadow: none;
-        margin: 0;
-        width: 100%;
+        width: 210mm !important;
+        min-height: 297mm !important;
+        height: 297mm !important;
+        margin: 0 !important;
         padding: 18mm 18mm;
+        box-shadow: none !important;
+        overflow: hidden;
+        break-inside: avoid;
+        page-break-inside: avoid;
     }
 }
 
