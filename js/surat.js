@@ -103,7 +103,7 @@ async function downloadPDF() {
         });
         const pageWidth = 210;
         const pageHeight = 297;
-        const margin = 10;
+        const margin = 10
         const maxWidth = pageWidth - (margin * 2);
         const maxHeight = pageHeight - (margin * 2);
         const imageRatio = canvas.width / canvas.height;

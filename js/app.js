@@ -48,7 +48,7 @@ function showLoading(message = 'Memproses data...') {
             font-family: var(--font-sans, sans-serif);
         `;
         loader.innerHTML = `
-            <div style="width: 50px; height: 50px; border: 4px solid rgba(255, 255, 255, 0.2); border-top: 4px solid #3b82f6; border-radius: 50%; animation: spinOverlay 0.9s linear infinite; margin-bottom: 1.25rem;"></div>
+            <div style="width: 50px; height: 50px; border: 4px solid rgba(255, 255, 255, 0.2); border-top: 4px solid #dc2626; border-radius: 50%; animation: spinOverlay 0.9s linear infinite; margin-bottom: 1.25rem;"></div>
             <p id="loading-text" style="font-weight: 600; font-size: 1.05rem; margin: 0; letter-spacing: 0.02em;">${message}</p>
             <style>@keyframes spinOverlay { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
         `;
@@ -78,7 +78,7 @@ function showToast(message, type = 'info', duration = 3500) {
 
     const toast = document.createElement('div');
     
-    let bg = 'var(--primary-600, #2563eb)';
+    let bg = 'var(--primary-600, #c1121f)';
     let icon = 'fa-info-circle';
 
     if (type === 'success') { bg = '#10b981'; icon = 'fa-check-circle'; }

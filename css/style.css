@@ -4,20 +4,20 @@
    1. CSS VARIABLES & SYSTEM DESIGN TOKENS
    ========================================================================== */
 :root {
-    /* Brand Colors - Modern Deep Corporate Palette */
-    --primary-900: #0f172a;
-    --primary-800: #1e293b;
-    --primary-700: #1e3a8a;
-    --primary-600: #2563eb;
-    --primary-500: #3b82f6;
-    --primary-400: #60a5fa;
-    --primary-100: #dbeafe;
-    --primary-50:  #eff6ff;
+    /* Brand Colors - Corporate Red & Black Palette */
+    --primary-900: #111111;
+    --primary-800: #242424;
+    --primary-700: #991b1b;
+    --primary-600: #c1121f;
+    --primary-500: #dc2626;
+    --primary-400: #ef4444;
+    --primary-100: #fee2e2;
+    --primary-50:  #fef2f2;
 
     /* Secondary Accent Colors */
-    --accent-600:  #4f46e5;
-    --accent-500:  #6366f1;
-    --accent-50:   #eef2ff;
+    --accent-600:  #7f1d1d;
+    --accent-500:  #b91c1c;
+    --accent-50:   #fff1f2;
 
     /* Status & Feedback Colors */
     --success-700: #047857;
@@ -177,6 +177,13 @@ a:hover {
     text-decoration: none !important;
 }
 
+.brand-image {
+    display: block;
+    width: 185px;
+    max-width: 42vw;
+    height: auto;
+}
+
 .logo-badge {
     width: 44px;
     height: 44px;
@@ -249,7 +256,7 @@ a:hover {
    5. HERO SECTION & HERO BANNER
    ========================================================================== */
 .hero-section {
-    background: linear-gradient(135deg, var(--primary-900) 0%, #1e293b 60%, #1e3a8a 100%);
+    background: linear-gradient(135deg, var(--primary-900) 0%, #242424 60%, var(--primary-700) 100%);
     color: #ffffff;
     padding: 4.5rem 0 5rem;
     position: relative;
@@ -345,14 +352,14 @@ a:hover {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary-600), #1d4ed8);
+    background: linear-gradient(135deg, var(--primary-600), #991b1b);
     color: #ffffff;
     border-color: var(--primary-600);
     box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    background: linear-gradient(135deg, #991b1b, #7f1d1d);
     color: #ffffff;
 }
 
@@ -1115,6 +1122,30 @@ textarea.form-control {
     margin: 0;
     letter-spacing: 0.05em;
     color: #000000;
+}
+
+.letter-company-logo {
+    display: block;
+    width: 235px;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto 0.45rem;
+}
+
+.letter-company-logo-panel {
+    display: inline-block;
+    background: #111111;
+    padding: 0.35rem 0.75rem;
+    margin-bottom: 0.45rem;
+}
+
+.letter-company-logo-panel .letter-company-logo {
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .brand-image { width: 145px; }
+    .brand-text p { display: none; }
 }
 
 .letter-company-header p {
