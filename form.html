@@ -91,11 +91,17 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="jabatan">Jabatan <span class="required">*</span></label>
-                            <input type="text" id="jabatan" class="form-control" placeholder="Jabatan saat ini" required>
+                            <select id="jabatan" class="form-select" required>
+                                <option value="Helper Packaging">Helper Packaging</option>
+                                <option value="PIC">PIC</option>
+                                <option value="Foreman">Foreman</option>
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="departemen">Departemen / Bagian</label>
-                            <input type="text" id="departemen" class="form-control" placeholder="Contoh: Production / HRD">
+                            <label class="form-label" for="departemen">Departemen</label>
+                            <select id="departemen" class="form-select" required>
+                                <option value="Produksi">Produksi</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="sektor">Sektor</label>
@@ -110,7 +116,7 @@
                             <input type="date" id="tanggal_mulai_bekerja" class="form-control">
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
-                            <label class="form-label" for="atasan_pic">Atasan / Foreman / PIC</label>
+                            <label class="form-label" for="atasan_pic">Foreman / PIC</label>
                             <input type="text" id="atasan_pic" class="form-control" placeholder="Nama atasan langsung">
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
