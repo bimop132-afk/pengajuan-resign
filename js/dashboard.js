@@ -230,7 +230,7 @@ function viewSurat(id) {
             status: item['Status Pengajuan']
         };
         sessionStorage.setItem('resign_data', JSON.stringify(dataForSurat));
-        window.open('surat.html', '_blank');
+        window.location.href = 'surat.html';
     }
 }
 
