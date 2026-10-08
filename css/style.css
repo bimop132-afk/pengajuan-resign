@@ -1178,16 +1178,18 @@ textarea.form-control {
 .letter-table-details td:first-child { width: 140px; }
 .letter-table-details td:nth-child(2) { width: 15px; }
 
-    .letter-signature-section {
-        margin-top: 1.75rem;
-        float: right;
-        width: 220px;
-        text-align: center;
+    .letter-signature-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 1.5rem;
+        margin-top: 2.5rem;
+        clear: both;
     }
 
-    .letter-signature-section:after {
-        content: "";
-        display: table;
+    .letter-signature-block {
+        flex: 1;
+        min-width: 180px;
+        text-align: center;
     }
 
     .letter-signature-space {
