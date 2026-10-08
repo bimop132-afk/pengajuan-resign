@@ -56,14 +56,6 @@ function viewLetter(data) {
     setElText('detail_nomor_surat', data.nomorSurat);
 }
 
-function viewSurat() {
-    window.location.href = 'surat.html';
-}
-
-function printSurat() {
-    printLetter();
-}
-
 function printLetter() {
     window.print();
 }
