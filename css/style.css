@@ -1178,33 +1178,45 @@ textarea.form-control {
 .letter-table-details td:first-child { width: 140px; }
 .letter-table-details td:nth-child(2) { width: 15px; }
 
-.letter-signature-section {
-    margin-top: 1.75rem;
-    float: right;
-    width: 220px;
-    text-align: center;
-}
+    .letter-signature-section {
+        margin-top: 1.75rem;
+        float: right;
+        width: 220px;
+        text-align: center;
+    }
 
-.letter-signature-space {
-    height: 55px;
-}
+    .letter-signature-section:after {
+        content: "";
+        display: table;
+    }
 
-/* Temporary, off-screen copy used when exporting with html2canvas. */
-.pdf-letter-export {
-    position: fixed !important;
-    top: 0 !important;
-    left: -10000px !important;
-    display: block !important;
-    min-height: 0 !important;
-    height: auto !important;
-    margin: 0 !important;
-    box-shadow: none !important;
-}
+    .letter-signature-space {
+        height: 55px;
+    }
 
-.letter-signature-name {
-    font-weight: 700;
-    text-decoration: underline;
-}
+    /* Temporary, off-screen copy used when exporting with html2canvas. */
+    .pdf-letter-export {
+        position: fixed !important;
+        top: 0 !important;
+        left: -10000px !important;
+        display: block !important;
+        min-height: 0 !important;
+        height: auto !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .letter-signature-name {
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    .letter-signature-placeholder {
+        font-weight: 400;
+        text-decoration: none;
+        font-size: 1.25rem;
+        letter-spacing: 2px;
+    }
 
 @page {
     size: A4 portrait;
