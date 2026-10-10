@@ -67,24 +67,56 @@ async function downloadPDF() {
     const nama = document.getElementById('surat-nama') ? document.getElementById('surat-nama').innerText.replace(/\s+/g, '_').toUpperCase() : 'NAMA';
     const nik = document.getElementById('surat-nik') ? document.getElementById('surat-nik').innerText : 'NIK';
     
-    if (typeof html2pdf === 'undefined') {
+    if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined' || !window.jspdf.jsPDF) {
         alert('Library PDF belum termuat. Silakan muat ulang halaman lalu coba kembali.');
         return;
     }
 
+    // Clone the letter to a detached element so we can render it without affecting the page
     const exportLetter = el.cloneNode(true);
     exportLetter.removeAttribute('id');
-    exportLetter.classList.add('pdf-letter-export');
+    exportLetter.style.position = 'absolute';
+    exportLetter.style.top = '0';
+    exportLetter.style.left = '0';
+    exportLetter.style.width = '210mm';
+    exportLetter.style.height = 'auto';
+    exportLetter.style.background = '#ffffff';
+    exportLetter.style.visibility = 'hidden';
+    exportLetter.style.zIndex = '-1';
+    exportLetter.style.boxShadow = 'none';
+    exportLetter.style.margin = '0';
+    exportLetter.style.padding = '20mm 18mm';
     document.body.appendChild(exportLetter);
 
     try {
-        await html2pdf().set({
-            margin: 10,
-            filename: `SURAT_RESIGN_${nik}_${nama}.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        }).from(exportLetter).save();
+        const canvas = await html2canvas(exportLetter, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#ffffff',
+            width: exportLetter.scrollWidth,
+            height: exportLetter.scrollHeight,
+            windowWidth: exportLetter.scrollWidth,
+            windowHeight: exportLetter.scrollHeight
+        });
+
+        const pdf = new window.jspdf.jsPDF({
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait'
+        });
+        const pageWidth = 210;
+        const pageHeight = 297;
+        const margin = 10;
+        const maxWidth = pageWidth - (margin * 2);
+        const maxHeight = pageHeight - (margin * 2);
+        const imageRatio = canvas.width / canvas.height;
+        const imageWidth = Math.min(maxWidth, maxHeight * imageRatio);
+        const imageHeight = imageWidth / imageRatio;
+        const x = (pageWidth - imageWidth) / 2;
+        const y = (pageHeight - imageHeight) / 2;
+
+        pdf.addImage(canvas.toDataURL('image/jpeg', 0.98), 'JPEG', x, y, imageWidth, imageHeight);
+        pdf.save(`SURAT_RESIGN_${nik}_${nama}.pdf`);
     } catch (error) {
         console.error('Gagal membuat PDF surat:', error);
         alert('PDF gagal dibuat. Silakan coba kembali.');

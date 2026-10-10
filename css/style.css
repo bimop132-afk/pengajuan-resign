@@ -1198,18 +1198,6 @@ textarea.form-control {
         height: 55px;
     }
 
-    /* Temporary, off-screen copy used when exporting with html2canvas. */
-    .pdf-letter-export {
-        position: fixed !important;
-        top: 0 !important;
-        left: -10000px !important;
-        display: block !important;
-        min-height: 0 !important;
-        height: auto !important;
-        margin: 0 !important;
-        box-shadow: none !important;
-    }
-
     .letter-signature-name {
         font-weight: 700;
         text-decoration: underline;
