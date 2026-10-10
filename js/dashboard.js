@@ -89,7 +89,7 @@ function renderTable(data) {
     tbody.innerHTML = '';
     
     if (data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted" style="padding: 2.5rem 1rem;">Tidak ada data pengajuan resign yang cocok.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="11" class="text-center text-muted" style="padding: 2.5rem 1rem;">Tidak ada data pengajuan resign yang cocok.</td></tr>';
         renderPagination(0);
         return;
     }
@@ -118,6 +118,7 @@ function renderTable(data) {
             <td>${formatDate(item['Tanggal Pengajuan'])}</td>
             <td><strong style="color: var(--danger-600);">${formatDate(item['Tanggal Efektif Resign'])}</strong></td>
             <td><span class="badge ${badgeClass}">${item['Status Pengajuan'] || 'PENGAJUAN BARU'}</span></td>
+            <td>${item['Uang Jaminan Nominal'] ? formatNumber(item['Uang Jaminan Nominal']) : '-'}</td>
             <td>
                 <div style="display: flex; gap: 0.35rem; justify-content: center;">
                     <button onclick="showDetail('${item['ID Pengajuan']}')" class="btn btn-sm btn-info" title="Detail Pengajuan"><i class="fas fa-eye"></i></button>

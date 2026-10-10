@@ -1,7 +1,7 @@
 // Configuration for Pengajuan Resign Application
 const CONFIG = {
     // Google Apps Script Web App URL - Replace with your deployed URL
-    API_URL: 'https://script.google.com/macros/s/AKfycbyYwRVaCfN74f_byNm1QhHW07HJ6Gr7v2sLCHOF70TGmtBRmKzYWEzPVn9ovCb9DEQ0/exec',
+    API_URL: 'https://script.google.com/macros/s/AKfycbz136-mDKYmtnSWGpZAS85NNCqGb5jE89uQM0gbKcReERq07qZRRax2zkaeaQslzWQZ/exec',
 
     // Company Info
     COMPANY_NAME: 'PT Mitra Sigma Tekindo',

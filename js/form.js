@@ -24,6 +24,15 @@ function initForm() {
         fileInput.addEventListener('change', handleFileUpload);
     }
 
+    // Auto-fetch uang jaminan when NIK loses focus
+    const nikInput = document.getElementById('nik');
+    if (nikInput) {
+        nikInput.addEventListener('blur', function() {
+            const nik = this.value.trim();
+            if (nik) fetchUangJaminan(nik);
+        });
+    }
+
     updateStepIndicator();
 }
 
@@ -110,6 +119,20 @@ function closeConfirmation() {
     document.getElementById('confirm-modal').style.display = 'none';
 }
 
+async function fetchUangJaminan(nik) {
+    try {
+        const response = await apiCall('getUangJaminan', { nik: nik }, 'GET');
+        if (response.success && response.data) {
+            const nominal = document.getElementById('uang_jaminan_nominal');
+            const status = document.getElementById('uang_jaminan_status');
+            if (nominal) nominal.value = response.data['Nominal'] || response.data['Nominal Uang Jaminan'] || '-';
+            if (status) status.value = response.data['Status'] || response.data['Status Uang Jaminan'] || 'Tidak ditemukan';
+        }
+    } catch (err) {
+        console.error('Gagal mengambil data uang jaminan:', err);
+    }
+}
+
 async function submitForm() {
     closeConfirmation();
     showLoading('Mengirim pengajuan...');
@@ -117,9 +140,9 @@ async function submitForm() {
     const formData = {
         nik: document.getElementById('nik').value,
         namaLengkap: document.getElementById('nama_lengkap').value,
-        tempatLahir: document.getElementById('tempat_lahir').value,
-        tanggalLahir: document.getElementById('tanggal_lahir').value,
-        jenisKelamin: document.getElementById('jenis_kelamin').value,
+        tempatLahir: document.getElementById('tempatahir').value,
+        tanggalLahir: document.getElementById('datinglahir').value,
+        jenisKelamin: document.getElementById('jeniskelamin').value,
         alamat: document.getElementById('alamat').value,
         noWhatsApp: document.getElementById('no_whatsapp').value,
         email: document.getElementById('email').value,
@@ -127,12 +150,14 @@ async function submitForm() {
         departemen: document.getElementById('departemen').value,
         sektor: document.getElementById('sektor').value,
         regu: document.getElementById('regu').value,
-        tanggalMulaiBekerja: document.getElementById('tanggal_mulai_bekerja').value,
+        tanggalMulaiBekerja: document.getElementById('dating_mulai_bekerja').value,
         atasanPIC: document.getElementById('atasan_pic').value,
-        tanggalPengajuan: document.getElementById('tanggal_pengajuan').value,
-        tanggalEfektifResign: document.getElementById('tanggal_efektif_resign').value,
+        tanggalPengajuan: document.getElementById('dating_pengajuan').value,
+        tanggalEfektifResign: document.getElementById('dating_efektif_resign').value,
         alasanResign: document.getElementById('alasan_resign').value === 'Lainnya' ? document.getElementById('alasan_lainnya').value : document.getElementById('alasan_resign').value,
-        keterangan: document.getElementById('keterangan').value
+        keterangan: document.getElementById('eterangan').value,
+        uangJaminanNominal: document.getElementById('uang_jaminan_nominal') ? document.getElementById('uang_jaminan_nominal').value : '',
+        uangJaminanStatus: document.getElementById('uang_jaminan_status') ? document.getElementById('uang_jaminan_status').value : ''
     };
 
     try {
@@ -158,6 +183,12 @@ async function submitForm() {
         } else {
             showToast(response.message || 'Gagal mengirim pengajuan', 'error');
         }
+    } catch (err) {
+        showToast('Terjadi kesalahan koneksi', 'error');
+    } finally {
+        hideLoading();
+    }
+}
     } catch (err) {
         showToast('Terjadi kesalahan koneksi', 'error');
     } finally {

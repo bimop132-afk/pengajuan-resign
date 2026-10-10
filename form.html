@@ -115,13 +115,31 @@
                             <label class="form-label" for="tanggal_mulai_bekerja">Tanggal Mulai Bekerja</label>
                             <input type="date" id="tanggal_mulai_bekerja" class="form-control">
                         </div>
-                        <div class="form-group" style="grid-column: 1 / -1;">
+<div class="form-group" style="grid-column: 1 / -1;">
                             <label class="form-label" for="atasan_pic">Foreman / PIC</label>
                             <input type="text" id="atasan_pic" class="form-control" placeholder="Nama atasan langsung">
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
-                            <label class="form-label" for="alamat">Alamat Lengkap</label>
-                            <textarea id="alamat" class="form-control" placeholder="Alamat domisili saat ini"></textarea>
+                            <label class="form-label" for="alamat">Nama atasan langsung</label>
+                            <textarea id="alamat" class="form-control" placeholder="/domisili saat ini"></textarea>
+                        </div>
+
+                        <!-- Uang Jaminan Section -->
+                        <div class="form-group" style="grid-column: 1 / -1; background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 1.25rem;">
+                            <h4 style="margin: 0 0 1rem; font-size: 1rem; color: var(--primary-600);"><i class="fas fa-wallet"></i> Informasi Uang Jaminan</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div class="form-group">
+                                    <label class="form-label" for="uang_jaminan_nominal">Nominal Uang Jaminan</label>
+                                    <input type="text" id="uang_jaminan_nominal" class="form-control" placeholder="Otomatis terisi" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="uang_jaminan_status">Status</label>
+                                    <input type="text" id="uang_jaminan_status" class="form-control" placeholder="Otomatis terisi" readonly>
+                                </div>
+                            </div>
+                            <p style="font-size: 0.8rem; color: var(--gray-500); margin: 0.5rem 0 0;">
+                                Data uang jaminan diambil otomatis berdasarkan NIK. Jika tidak muncul, hubungi HRD.
+                            </p>
                         </div>
                     </div>
 

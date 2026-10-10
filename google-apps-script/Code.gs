@@ -115,6 +115,19 @@ function doGet(e) {
       return createJsonResponse({ success: true, data: rows });
     }
 
+    if (action === 'getUangJaminan') {
+      const nik = e.parameter.nik;
+      if (!nik) return createJsonResponse({ success: false, message: 'NIK diperlukan' });
+      const uangJaminanSheet = ss.getSheetByName('Uang Jaminan');
+      if (!uangJaminanSheet) return createJsonResponse({ success: false, message: 'Sheet Uang Jaminan tidak ditemukan' });
+      const rows = getRowsDataAsObjects(uangJaminanSheet);
+      const match = rows.find(r => (r['NIK'] || '').toString() === nik.toString());
+      if (match) {
+        return createJsonResponse({ success: true, data: match });
+      }
+      return createJsonResponse({ success: false, message: 'Data uang jaminan tidak ditemukan' });
+    }
+
     if (action === 'getStats') {
       if (!verifyToken(e.parameter.token)) return createJsonResponse({ success: false, message: 'Token invalid' });
       const rows = getRowsDataAsObjects(sheet);
@@ -157,13 +170,13 @@ function doPost(e) {
     const ss = getSpreadsheet();
     let sheet = ss.getSheetByName('Data Pengajuan');
     
-    if (!sheet) {
+if (!sheet) {
         sheet = ss.insertSheet('Data Pengajuan');
         sheet.appendRow([
             'ID Pengajuan', 'Nomor Surat', 'NIK', 'Nama Lengkap', 'Tempat Lahir', 'Tanggal Lahir', 'Jenis Kelamin',
-            'Alamat', 'No WhatsApp', 'Email', 'Jabatan', 'Departemen', 'Sektor', 'Regu', 'Tanggal Mulai Bekerja',
+            'Nama Lengkap', 'No WhatsApp', 'Email', 'Jabatan', 'Departemen', 'Sektor', 'Regu', 'Tanggal Mulai Bekerja',
             'Atasan PIC', 'Tanggal Pengajuan', 'Tanggal Efektif Resign', 'Alasan Resign', 'Keterangan', 'Status Pengajuan',
-            'Dokumen Pendukung', 'Waktu Pengajuan', 'Waktu Diproses'
+            'Dokumen Pendukung', 'Waktu Pengajuan', 'Waktu Diproses', 'Uang Jaminan Nominal', 'Uang Jaminan Status'
         ]);
     }
 
@@ -175,7 +188,8 @@ function doPost(e) {
         idPengajuan, nomorSurat, data.nik, data.namaLengkap, data.tempatLahir, data.tanggalLahir, data.jenisKelamin,
         data.alamat, data.noWhatsApp, data.email, data.jabatan, data.departemen, data.sektor, data.regu,
         data.tanggalMulaiBekerja, data.atasanPIC, data.tanggalPengajuan, data.tanggalEfektifResign, data.alasanResign,
-        data.keterangan, 'PENGAJUAN BARU', '', new Date(), ''
+        data.keterangan, 'PENGAJUAN BARU', '', new Date(), '',
+        data.uangJaminanNominal || '', data.uangJaminanStatus || ''
       ];
       
       sheet.appendRow(rowData);
