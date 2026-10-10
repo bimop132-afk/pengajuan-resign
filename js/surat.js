@@ -72,34 +72,24 @@ async function downloadPDF() {
         return;
     }
 
-    const exportLetter = el.cloneNode(true);
-    exportLetter.removeAttribute('id');
-    exportLetter.style.position = 'absolute';
-    exportLetter.style.top = '0';
-    exportLetter.style.left = '0';
-    exportLetter.style.width = '210mm';
-    exportLetter.style.height = 'auto';
-    exportLetter.style.background = '#ffffff';
-    exportLetter.style.visibility = 'hidden';
-    exportLetter.style.zIndex = '-1';
-    exportLetter.style.boxShadow = 'none';
-    exportLetter.style.margin = '0';
-    exportLetter.style.padding = '20mm 18mm';
-    document.body.appendChild(exportLetter);
+    // Hide the toolbar temporarily so it doesn't appear in the PDF
+    const toolbar = document.querySelector('.letter-toolbar');
+    const origToolbarDisplay = toolbar ? toolbar.style.display : '';
+    if (toolbar) toolbar.style.display = 'none';
 
     try {
         await html2pdf().set({
-            margin: 10,
+            margin: 0,
             filename: `SURAT_RESIGN_${nik}_${nama}.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        }).from(exportLetter).save();
+        }).from(el).save();
     } catch (error) {
         console.error('Gagal membuat PDF surat:', error);
         alert('PDF gagal dibuat. Silakan coba kembali.');
     } finally {
-        exportLetter.remove();
+        if (toolbar) toolbar.style.display = origToolbarDisplay;
     }
 }
 
