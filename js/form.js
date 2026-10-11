@@ -189,12 +189,6 @@ async function submitForm() {
         hideLoading();
     }
 }
-    } catch (err) {
-        showToast('Terjadi kesalahan koneksi', 'error');
-    } finally {
-        hideLoading();
-    }
-}
 
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('form-resign')) {
