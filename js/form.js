@@ -133,31 +133,36 @@ async function fetchUangJaminan(nik) {
     }
 }
 
+function getVal(id) {
+    const el = document.getElementById(id);
+    return el ? el.value : '';
+}
+
 async function submitForm() {
     closeConfirmation();
     showLoading('Mengirim pengajuan...');
     
     const formData = {
-        nik: document.getElementById('nik').value,
-        namaLengkap: document.getElementById('nama_lengkap').value,
-        tempatLahir: document.getElementById('tempatlahir').value,
-        tanggalLahir: document.getElementById('datinglahir').value,
-        jenisKelamin: document.getElementById('jeniskelamin').value,
-        alamat: document.getElementById('alamat').value,
-        noWhatsApp: document.getElementById('no_whatsapp').value,
-        email: document.getElementById('email').value,
-        jabatan: document.getElementById('jabatan').value,
-        departemen: document.getElementById('departemen').value,
-        sektor: document.getElementById('sektor').value,
-        regu: document.getElementById('regu').value,
-        tanggalMulaiBekerja: document.getElementById('dating_mulai_bekerja').value,
-        atasanPIC: document.getElementById('atasan_pic').value,
-        tanggalPengajuan: document.getElementById('dating_pengajuan').value,
-        tanggalEfektifResign: document.getElementById('dating_efektif_resign').value,
-        alasanResign: document.getElementById('alasan_resign').value === 'Lainnya' ? document.getElementById('alasan_lainnya').value : document.getElementById('alasan_resign').value,
-        keterangan: document.getElementById('eterangan').value,
-        uangJaminanNominal: document.getElementById('uang_jaminan_nominal') ? document.getElementById('uang_jaminan_nominal').value : '',
-        uangJaminanStatus: document.getElementById('uang_jaminan_status') ? document.getElementById('uang_jaminan_status').value : ''
+        nik: getVal('nik'),
+        namaLengkap: getVal('nama_lengkap'),
+        tempatLahir: getVal('tempatlahir'),
+        tanggalLahir: getVal('datinglahir'),
+        jenisKelamin: getVal('jeniskelamin'),
+        alamat: getVal('alamat'),
+        noWhatsApp: getVal('no_whatsapp'),
+        email: getVal('email'),
+        jabatan: getVal('jabatan'),
+        departemen: getVal('departemen'),
+        sektor: getVal('sektor'),
+        regu: getVal('regu'),
+        tanggalMulaiBekerja: getVal('dating_mulai_bekerja'),
+        atasanPIC: getVal('atasan_pic'),
+        tanggalPengajuan: getVal('dating_pengajuan'),
+        tanggalEfektifResign: getVal('dating_efektif_resign'),
+        alasanResign: document.getElementById('alasan_resign').value === 'Lainnya' ? getVal('alasan_lainnya') : getVal('alasan_resign'),
+        keterangan: getVal('eterangan'),
+        uangJaminanNominal: getVal('uang_jaminan_nominal'),
+        uangJaminanStatus: getVal('uang_jaminan_status')
     };
 
     try {
@@ -183,6 +188,13 @@ async function submitForm() {
         } else {
             showToast(response.message || 'Gagal mengirim pengajuan', 'error');
         }
+    } catch (err) {
+        console.error('Submit error:', err);
+        showToast('Gagal terhubung ke server. Pastikan API_URL di config.js sudah benar.', 'error');
+    } finally {
+        hideLoading();
+    }
+}
     } catch (err) {
         console.error('Submit error:', err);
         showToast('Gagal terhubung ke server. Pastikan API_URL di config.js sudah benar.', 'error');
