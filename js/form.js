@@ -195,13 +195,6 @@ async function submitForm() {
         hideLoading();
     }
 }
-    } catch (err) {
-        console.error('Submit error:', err);
-        showToast('Gagal terhubung ke server. Pastikan API_URL di config.js sudah benar.', 'error');
-    } finally {
-        hideLoading();
-    }
-}
 
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('form-resign')) {
