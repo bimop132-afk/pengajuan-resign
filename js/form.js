@@ -140,7 +140,7 @@ async function submitForm() {
     const formData = {
         nik: document.getElementById('nik').value,
         namaLengkap: document.getElementById('nama_lengkap').value,
-        tempatLahir: document.getElementById('tempatahir').value,
+        tempatLahir: document.getElementById('tempatlahir').value,
         tanggalLahir: document.getElementById('datinglahir').value,
         jenisKelamin: document.getElementById('jeniskelamin').value,
         alamat: document.getElementById('alamat').value,
@@ -186,12 +186,6 @@ async function submitForm() {
     } catch (err) {
         console.error('Submit error:', err);
         showToast('Gagal terhubung ke server. Pastikan API_URL di config.js sudah benar.', 'error');
-    } finally {
-        hideLoading();
-    }
-}
-    } catch (err) {
-        showToast('Terjadi kesalahan koneksi', 'error');
     } finally {
         hideLoading();
     }
