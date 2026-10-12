@@ -184,6 +184,13 @@ async function submitForm() {
             showToast(response.message || 'Gagal mengirim pengajuan', 'error');
         }
     } catch (err) {
+        console.error('Submit error:', err);
+        showToast('Gagal terhubung ke server. Pastikan API_URL di config.js sudah benar.', 'error');
+    } finally {
+        hideLoading();
+    }
+}
+    } catch (err) {
         showToast('Terjadi kesalahan koneksi', 'error');
     } finally {
         hideLoading();
