@@ -79,10 +79,10 @@
                 <button onclick="window.location.href='surat.html'" class="btn btn-primary btn-lg">
                     <i class="fas fa-file-alt"></i> LIHAT SURAT RESIGN
                 </button>
-                <button onclick="printLetter()" class="btn btn-secondary btn-lg">
+                <button onclick="window.location.href='surat.html?print=1'" class="btn btn-secondary btn-lg">
                     <i class="fas fa-print"></i> CETAK SURAT
                 </button>
-                <button onclick="downloadPDF()" class="btn btn-success btn-lg">
+                <button onclick="window.location.href='surat.html?download=1'" class="btn btn-success btn-lg">
                     <i class="fas fa-file-pdf"></i> SIMPAN PDF
                 </button>
             </div>
@@ -96,82 +96,6 @@
         </div>
 
     </main>
-
-    <!-- Hidden Printable Document Template Container -->
-    <div style="position: absolute; top: 0; left: 0; visibility: hidden; width: 210mm;">
-        <div class="letter-paper" id="surat-container">
-            <div class="letter-company-header">
-                <img src="assets/logo-mitra-sigma-tekindo-light.png" class="letter-company-logo" alt="Logo PT Mitra Sigma Tekindo">
-                <p>Jl. Perusahaan No. 123, Majalengka, Jawa Barat | Email: hrd@mitrasigmatekindo.co.id</p>
-            </div>
-            
-            <div class="letter-doc-title">SURAT PENGAJUAN RESIGN</div>
-            <div class="letter-doc-no">Nomor: <span id="surat-nomor">-</span></div>
-
-            <p style="margin-bottom: 1.5rem;">
-                Kepada Yth.<br>
-                <strong>HRD PT Mitra Sigma Tekindo</strong><br>
-                di Tempat
-            </p>
-
-            <p>Dengan hormat,</p>
-            <p>Saya yang bertanda tangan di bawah ini:</p>
-
-            <table class="letter-table-details">
-                <tr><td>Nama Lengkap</td><td>:</td><td><strong id="surat-nama">-</strong></td></tr>
-                <tr><td>NIK</td><td>:</td><td id="surat-nik">-</td></tr>
-                <tr><td>Jabatan</td><td>:</td><td id="surat-jabatan">-</td></tr>
-                <tr><td>Departemen</td><td>:</td><td id="surat-departemen">-</td></tr>
-                <tr><td>Sektor</td><td>:</td><td id="surat-sektor">-</td></tr>
-                <tr><td>Regu</td><td>:</td><td id="surat-regu">-</td></tr>
-            </table>
-
-            <p style="margin-top: 1.5rem;">
-                Dengan ini mengajukan permohonan pengunduran diri dari PT Mitra Sigma Tekindo, terhitung efektif mulai tanggal:
-            </p>
-
-            <p style="text-align: center; margin: 1.25rem 0;">
-                <strong style="font-size: 1.15rem; text-decoration: underline;" id="surat-tanggal-efektif">-</strong>
-            </p>
-
-            <p>Adapun alasan pengunduran diri saya adalah:</p>
-
-            <p style="padding-left: 1.5rem;">
-                <strong id="surat-alasan">-</strong>
-            </p>
-
-            <p style="margin-top: 1.5rem;">
-                Demikian surat pengajuan resign ini saya buat dengan sebenar-benarnya dan tanpa adanya paksaan dari pihak manapun. 
-                Saya mengucapkan terima kasih atas kesempatan dan pengalaman yang telah diberikan selama bekerja di PT Mitra Sigma Tekindo.
-            </p>
-
-            <p style="text-align: right; margin-top: 2rem;">
-                Majalengka, <span id="surat-tanggal-pengajuan">-</span>
-            </p>
-            <div class="letter-signature-container">
-                <div class="letter-signature-block">
-                    <p>HRD,</p>
-                    <div class="letter-signature-space"></div>
-                    <div class="letter-signature-placeholder"></div>
-                </div>
-
-                <div class="letter-signature-block">
-                    <p>Foreman,</p>
-                    <div class="letter-signature-space"></div>
-                    <div class="letter-signature-placeholder"></div>
-                </div>
-
-                <div class="letter-signature-block">
-                    <p>Hormat saya,</p>
-                    <div class="letter-signature-space"></div>
-                    <div class="letter-signature-name" id="surat-ttd-nama">-</div>
-                    <div>NIK. <span id="surat-ttd-nik">-</span></div>
-                </div>
-            </div>
-            
-            <div style="clear: both;"></div>
-        </div>
-    </div>
 
     <footer>
         <div class="container footer-flex">

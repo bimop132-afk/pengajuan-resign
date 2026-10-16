@@ -33,10 +33,10 @@ Google Spreadsheet akan bertindak sebagai database utama untuk menyimpan data re
 2. Di bagian bawah, ubah nama *Sheet1* menjadi **DATA RESIGN**.
 3. Buat sheet baru dan beri nama **LOG AKTIVITAS**.
 
-**Konfigurasi Sheet "DATA RESIGN":**
-Buat header di baris pertama untuk kolom A sampai X dengan teks berikut:
+**Konfigurasi Sheet "DATA RESIGN" (atau "Data Pengajuan"):**
+Buat header di baris pertama untuk kolom A sampai Z dengan teks berikut:
 - A: `ID Pengajuan`
-- B: `Timestamp`
+- B: `Nomor Surat`
 - C: `NIK`
 - D: `Nama Lengkap`
 - E: `Tempat Lahir`
@@ -50,25 +50,36 @@ Buat header di baris pertama untuk kolom A sampai X dengan teks berikut:
 - M: `Sektor`
 - N: `Regu`
 - O: `Tanggal Mulai Bekerja`
-- P: `Atasan/PIC`
+- P: `Atasan PIC`
 - Q: `Tanggal Pengajuan`
 - R: `Tanggal Efektif Resign`
 - S: `Alasan Resign`
 - T: `Keterangan`
 - U: `Status Pengajuan`
-- V: `Nomor Surat`
-- W: `Link Surat`
+- V: `Dokumen Pendukung`
+- W: `Waktu Pengajuan`
 - X: `Waktu Diproses`
+- Y: `Uang Jaminan Nominal`
+- Z: `Uang Jaminan Status`
 
 *(Tip: Blok baris pertama, buat tebal (Bold), dan bekukan baris (View > Freeze > 1 row) untuk kemudahan membaca.)*
 
-**Konfigurasi Sheet "LOG AKTIVITAS":**
+**Konfigurasi Sheet "LOG AKTIVITAS" (atau "Log Activity"):**
 Buat header di baris pertama untuk kolom A sampai E:
 - A: `Timestamp`
 - B: `User`
-- C: `Aktivitas`
+- C: `Activity`
 - D: `ID Pengajuan`
 - E: `Keterangan`
+
+**Konfigurasi Sheet "Uang Jaminan":**
+Buat sheet baru bernama **Uang Jaminan** dengan header di baris pertama untuk kolom A sampai D:
+- A: `NIK`
+- B: `Nama Lengkap`
+- C: `Nominal`
+- D: `Status`
+
+*(Catatan: Anda juga bisa menjalankan fungsi `setupSpreadsheet()` sekali dari editor Google Apps Script untuk membuat semua sheet dan header di atas secara otomatis!)*
 
 **Catat Spreadsheet ID:**
 Lihat pada URL browser Anda. URL akan terlihat seperti ini:

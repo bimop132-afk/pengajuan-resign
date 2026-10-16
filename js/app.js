@@ -1,7 +1,7 @@
 async function apiCall(action, params = {}, method = 'GET') {
     const baseUrl = (typeof CONFIG !== 'undefined' && CONFIG.API_URL) 
         ? CONFIG.API_URL 
-        : 'https://script.google.com/macros/s/AKfycbx-gq9IdG3fg3mkyxPjqJwofxruZdutbe9MoNa7NOOM-6GjbqWTnBAfKvVbmpe0_L1N/exec';
+        : 'https://script.google.com/macros/s/AKfycbz136-mDKYmtnSWGpZAS85NNCqGb5jE89uQM0gbKcReERq07qZRRax2zkaeaQslzWQZ/exec';
 
     try {
         let url = new URL(baseUrl);
@@ -19,15 +19,25 @@ async function apiCall(action, params = {}, method = 'GET') {
                 }
             }
         } else if (method === 'POST') {
-            options.body = JSON.stringify(params);
+            const bodyData = { action: action, ...params };
+            options.body = JSON.stringify(bodyData);
             options.headers = {
                 'Content-Type': 'text/plain;charset=utf-8' // Avoid CORS preflight in Google Apps Script
             };
         }
 
         const response = await fetch(url.toString(), options);
-        if (!response.ok) throw new Error('Network response was not ok');
-        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(`Koneksi HTTP bermasalah (${response.status}: ${response.statusText})`);
+        }
+        const text = await response.text();
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (jsonErr) {
+            console.error('Non-JSON server response:', text);
+            throw new Error('Respon server tidak valid. Pastikan Web App Apps Script sudah di-deploy dengan akses "Anyone".');
+        }
         return data;
     } catch (error) {
         console.error('API Error:', error);
@@ -110,8 +120,12 @@ function showToast(message, type = 'info', duration = 3500) {
 
 function formatDate(dateStr) {
     if (!dateStr) return '-';
+    if (typeof dateStr === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+        const [y, m, d] = dateStr.split('-');
+        return `${d}/${m}/${y}`;
+    }
     const date = new Date(dateStr);
-    if (isNaN(date.getTime())) return dateStr;
+    if (isNaN(date.getTime())) return String(dateStr);
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
@@ -120,16 +134,34 @@ function formatDate(dateStr) {
 
 function formatDateLong(dateStr) {
     if (!dateStr) return '-';
-    const date = new Date(dateStr);
-    if (isNaN(date.getTime())) return dateStr;
     const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    if (typeof dateStr === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+        const [y, m, d] = dateStr.split('-');
+        const monthIndex = parseInt(m, 10) - 1;
+        return `${parseInt(d, 10)} ${months[monthIndex]} ${y}`;
+    }
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return String(dateStr);
     return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+}
+
+function getDateOnly(dateVal) {
+    if (!dateVal) return '';
+    if (typeof dateVal === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateVal)) {
+        return dateVal;
+    }
+    const d = new Date(dateVal);
+    if (isNaN(d.getTime())) return String(dateVal).split('T')[0];
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 }
 
 function formatDateTime(dateStr) {
     if (!dateStr) return '-';
     const date = new Date(dateStr);
-    if (isNaN(date.getTime())) return dateStr;
+    if (isNaN(date.getTime())) return String(dateStr);
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
@@ -149,9 +181,9 @@ function validateField(fieldId, rules) {
         errorMsg = 'Field ini wajib diisi';
     } else if (rules.type === 'email' && el.value.trim()) {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!re.test(el.value)) {
+        if (!re.test(el.value.trim())) {
             isValid = false;
-            errorMsg = 'Email tidak valid';
+            errorMsg = 'Format email tidak valid';
         }
     }
     
@@ -172,6 +204,7 @@ function showFieldError(fieldId, message) {
     if (!errorEl) {
         errorEl = document.createElement('div');
         errorEl.id = `${fieldId}-error`;
+        errorEl.className = 'error-message';
         errorEl.style.cssText = 'color: var(--danger-600, #e11d48); font-size: 0.8rem; font-weight: 600; margin-top: 0.3rem;';
         el.parentNode.appendChild(errorEl);
     }
@@ -188,6 +221,7 @@ function clearFieldError(fieldId) {
 
 function clearAllErrors() {
     document.querySelectorAll('.error-message').forEach(el => el.remove());
+    document.querySelectorAll('.form-control, .form-select').forEach(el => el.style.borderColor = '');
 }
 
 function getCurrentDate() {
@@ -200,16 +234,35 @@ function getCurrentDate() {
 
 function sanitizeInput(str) {
     const div = document.createElement('div');
-    div.innerText = str;
+    div.innerText = str || '';
     return div.innerHTML;
 }
 
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 function formatNumber(num) {
-    return Number(num).toLocaleString('id-ID');
+    if (num === undefined || num === null || num === '') return '-';
+    if (typeof num === 'string' && /[a-zA-Z]/.test(num)) return num;
+    const cleanNum = typeof num === 'string' ? num.replace(/[^\d.-]/g, '') : num;
+    const n = Number(cleanNum);
+    return isNaN(n) ? String(num) : n.toLocaleString('id-ID');
 }
 
 function initApp() {
-    console.log('App initialized');
+    // Auto-clear errors on typing
+    document.querySelectorAll('.form-control, .form-select').forEach(input => {
+        input.addEventListener('input', () => clearFieldError(input.id));
+        input.addEventListener('change', () => clearFieldError(input.id));
+    });
 }
 
 document.addEventListener('DOMContentLoaded', initApp);
+

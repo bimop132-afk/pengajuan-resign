@@ -21,6 +21,12 @@
                 </div>
             </a>
             <div class="nav-links">
+                <button onclick="refreshDashboard()" class="btn btn-sm btn-secondary" style="background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.25); color: #ffffff;" title="Refresh Data">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+                <button onclick="exportToCSV()" class="btn btn-sm btn-success" style="background: #10b981; border-color: #059669; color: #ffffff;" title="Ekspor ke Excel / CSV">
+                    <i class="fas fa-file-excel"></i> Ekspor CSV
+                </button>
                 <div style="display: flex; align-items: center; gap: 0.75rem; background: rgba(255, 255, 255, 0.1); padding: 0.4rem 1rem; border-radius: var(--radius-full); font-size: 0.88rem; backdrop-filter: blur(10px);">
                     <i class="fas fa-user-circle" style="font-size: 1.1rem; color: var(--primary-100);"></i>
                     <span>Admin HRD</span>
@@ -176,7 +182,7 @@
                         <tr>
                             <th>ID Pengajuan</th>
                             <th>NIK</th>
-                            <th>Name Karyawan</th>
+                            <th>Nama Karyawan</th>
                             <th>Jabatan</th>
                             <th>Sektor</th>
                             <th>Regu</th>

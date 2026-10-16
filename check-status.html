@@ -151,78 +151,91 @@
                 return;
             }
 
-            const response = await apiCall('checkStatus', { nik, idPengajuan }, 'GET');
+            showLoading('Mengecek status pengajuan...');
+            try {
+                const response = await apiCall('checkStatus', { nik, idPengajuan }, 'GET');
 
-            if (response.success && response.data) {
-                currentStatusData = response.data;
-                const d = response.data;
+                if (response.success && response.data) {
+                    currentStatusData = response.data;
+                    const d = response.data;
 
-                document.getElementById('result_nama').innerText = d['Nama Lengkap'] || '-';
-                document.getElementById('result_nik').innerText = d['NIK'] || '-';
-                document.getElementById('result_nomor_surat').innerText = d['Nomor Surat'] || '-';
-                document.getElementById('result_tanggal_pengajuan').innerText = formatDateLong(d['Tanggal Pengajuan']);
-                document.getElementById('result_tanggal_efektif').innerText = formatDateLong(d['Tanggal Efektif Resign']);
-                
-                const status = d['Status Pengajuan'] || 'PENGAJUAN BARU';
-                const statusBadge = document.getElementById('result_status');
-                statusBadge.innerText = status;
+                    document.getElementById('result_nama').innerText = (d['Nama Lengkap'] || '-').trim();
+                    document.getElementById('result_nik').innerText = (d['NIK'] || '-').trim();
+                    document.getElementById('result_nomor_surat').innerText = (d['Nomor Surat'] || '-').trim();
+                    document.getElementById('result_tanggal_pengajuan').innerText = formatDateLong(d['Tanggal Pengajuan']);
+                    document.getElementById('result_tanggal_efektif').innerText = formatDateLong(d['Tanggal Efektif Resign']);
+                    
+                    const status = (d['Status Pengajuan'] || 'PENGAJUAN BARU').trim().toUpperCase();
+                    const statusBadge = document.getElementById('result_status');
+                    statusBadge.innerText = status;
 
-                // Update Timeline Nodes
-                const nodes = [
-                    document.getElementById('timeline-1'),
-                    document.getElementById('timeline-2'),
-                    document.getElementById('timeline-3'),
-                    document.getElementById('timeline-4')
-                ];
+                    // Update Timeline Nodes
+                    const nodes = [
+                        document.getElementById('timeline-1'),
+                        document.getElementById('timeline-2'),
+                        document.getElementById('timeline-3'),
+                        document.getElementById('timeline-4')
+                    ];
 
-                nodes.forEach(n => n.className = 'timeline-node');
+                    nodes.forEach(n => n.className = 'timeline-node');
 
-                if (status === 'PENGAJUAN BARU') {
-                    statusBadge.className = 'badge badge-baru';
-                    nodes[0].className = 'timeline-node active';
-                } else if (status === 'DIPERIKSA HRD') {
-                    statusBadge.className = 'badge badge-diperiksa';
-                    nodes[0].className = 'timeline-node completed';
-                    nodes[1].className = 'timeline-node active';
-                } else if (status === 'DISETUJUI') {
-                    statusBadge.className = 'badge badge-disetujui';
-                    nodes[0].className = 'timeline-node completed';
-                    nodes[1].className = 'timeline-node completed';
-                    nodes[2].className = 'timeline-node active';
-                } else if (status === 'DITOLAK') {
-                    statusBadge.className = 'badge badge-ditolak';
-                    nodes[0].className = 'timeline-node completed';
-                    nodes[1].className = 'timeline-node rejected';
-                } else if (status === 'SELESAI') {
-                    statusBadge.className = 'badge badge-selesai';
-                    nodes.forEach(n => n.className = 'timeline-node completed');
-                }
+                    if (status === 'PENGAJUAN BARU') {
+                        statusBadge.className = 'badge badge-baru';
+                        nodes[0].className = 'timeline-node active';
+                    } else if (status === 'DIPERIKSA HRD') {
+                        statusBadge.className = 'badge badge-diperiksa';
+                        nodes[0].className = 'timeline-node completed';
+                        nodes[1].className = 'timeline-node active';
+                    } else if (status === 'DISETUJUI') {
+                        statusBadge.className = 'badge badge-disetujui';
+                        nodes[0].className = 'timeline-node completed';
+                        nodes[1].className = 'timeline-node completed';
+                        nodes[2].className = 'timeline-node active';
+                    } else if (status === 'DITOLAK') {
+                        statusBadge.className = 'badge badge-ditolak';
+                        nodes[0].className = 'timeline-node completed';
+                        nodes[1].className = 'timeline-node rejected';
+                    } else if (status === 'SELESAI') {
+                        statusBadge.className = 'badge badge-selesai';
+                        nodes.forEach(n => n.className = 'timeline-node completed');
+                    }
 
-                // Show Notes if present
-                const rejBox = document.getElementById('rejection-reason');
-                if (d['Keterangan'] && d['Keterangan'].includes('HRD:')) {
-                    rejBox.style.display = 'block';
-                    document.getElementById('rejection-text').innerText = d['Keterangan'];
+                    // Show Notes if present
+                    const rejBox = document.getElementById('rejection-reason');
+                    if (d['Keterangan'] && d['Keterangan'].includes('HRD:')) {
+                        rejBox.style.display = 'block';
+                        document.getElementById('rejection-text').innerText = d['Keterangan'];
+                    } else {
+                        rejBox.style.display = 'none';
+                    }
+
+                    document.getElementById('result-area').style.display = 'block';
+                    document.getElementById('error-area').style.display = 'none';
                 } else {
-                    rejBox.style.display = 'none';
+                    document.getElementById('result-area').style.display = 'none';
+                    document.getElementById('error-area').style.display = 'block';
                 }
-
-                document.getElementById('result-area').style.display = 'block';
-                document.getElementById('error-area').style.display = 'none';
-            } else {
+            } catch (err) {
+                console.error('Error checkStatus:', err);
+                showToast(err.message || 'Gagal mengecek status', 'error');
                 document.getElementById('result-area').style.display = 'none';
                 document.getElementById('error-area').style.display = 'block';
+            } finally {
+                hideLoading();
             }
         }
 
         function viewSuratFromStatus() {
             if (currentStatusData) {
-                populateLetterFromApiData(currentStatusData);
-                sessionStorage.setItem('resign_data', JSON.stringify({
+                const sessionData = {
                     idPengajuan: currentStatusData['ID Pengajuan'],
                     nomorSurat: currentStatusData['Nomor Surat'],
                     nik: currentStatusData['NIK'],
                     namaLengkap: currentStatusData['Nama Lengkap'],
+                    tempatLahir: currentStatusData['Tempat Lahir'],
+                    tanggalLahir: currentStatusData['Tanggal Lahir'],
+                    jenisKelamin: currentStatusData['Jenis Kelamin'],
+                    alamat: currentStatusData['Alamat'],
                     jabatan: currentStatusData['Jabatan'],
                     departemen: currentStatusData['Departemen'],
                     sektor: currentStatusData['Sektor'],
@@ -231,10 +244,22 @@
                     tanggalEfektifResign: currentStatusData['Tanggal Efektif Resign'],
                     alasanResign: currentStatusData['Alasan Resign'],
                     status: currentStatusData['Status Pengajuan']
-                }));
-                window.location.href = 'surat.html';
+                };
+                sessionStorage.setItem('resign_data', JSON.stringify(sessionData));
+                window.location.href = `surat.html?id=${encodeURIComponent(currentStatusData['ID Pengajuan'] || '')}&nik=${encodeURIComponent(currentStatusData['NIK'] || '')}`;
             }
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const nik = params.get('nik');
+            const id = params.get('id') || params.get('idPengajuan');
+            if (nik) document.getElementById('search_nik').value = nik;
+            if (id) document.getElementById('search_id_pengajuan').value = id;
+            if (nik && id) {
+                checkStatus();
+            }
+        });
     </script>
 </body>
 </html>
