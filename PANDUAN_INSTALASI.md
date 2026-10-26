@@ -1,4 +1,4 @@
-# PANDUAN INSTALASI - Aplikasi Pengajuan Resign Karyawan
+# PANDUAN INSTALASI - Aplikasi HRSDM & Pengajuan Resign Karyawan
 
 Panduan lengkap ini akan membantu Anda melakukan instalasi dan setup Aplikasi Pengajuan Resign Karyawan PT Mitra Sigma Tekindo dari awal hingga aplikasi siap digunakan.
 
@@ -27,7 +27,7 @@ Sebelum memulai, pastikan Anda memiliki:
 
 ## 2. Setup Google Spreadsheet
 
-Google Spreadsheet akan bertindak sebagai database utama untuk menyimpan data resign karyawan dan log aktivitas sistem.
+Google Spreadsheet akan bertindak sebagai database utama untuk menyimpan data resign, log aktivitas, dan data operasional HRSDM.
 
 1. Buka [Google Sheets](https://sheets.google.com) dan buat Spreadsheet baru bernama **"DATABASE PENGAJUAN RESIGN"**.
 2. Di bagian bawah, ubah nama *Sheet1* menjadi **DATA RESIGN**.
@@ -79,7 +79,18 @@ Buat sheet baru bernama **Uang Jaminan** dengan header di baris pertama untuk ko
 - C: `Nominal`
 - D: `Status`
 
-*(Catatan: Anda juga bisa menjalankan fungsi `setupSpreadsheet()` sekali dari editor Google Apps Script untuk membuat semua sheet dan header di atas secara otomatis!)*
+**Inisialisasi HRSDM Center (wajib sekali):**
+
+Setelah menyalin `Code.gs`, jalankan fungsi `setupHRSDMSpreadsheet()` dari editor Apps Script. Fungsi ini otomatis membuat sheet berikut tanpa mengubah data resign yang sudah ada:
+
+- `Karyawan` — master database karyawan.
+- `Kandidat` — pipeline seleksi, belum tanda tangan kontrak, APD, dan penempatan.
+- `Kontrak` — register kontrak kerja.
+- `Onboarding` — dokumen, APD, orientasi, dan penempatan karyawan baru.
+- `Surat Peringatan` — register SP dan tindak lanjut.
+- `Kebutuhan Karyawan` — standar kebutuhan, aktual, serta gap tenaga kerja.
+
+Anda juga bisa menjalankan `setupSpreadsheet()` untuk membuat seluruh sheet lama dan baru sekaligus. Jalankan hanya saat setup awal, lalu lakukan deployment ulang setelah perubahan kode.
 
 **Catat Spreadsheet ID:**
 Lihat pada URL browser Anda. URL akan terlihat seperti ini:
@@ -166,6 +177,7 @@ Setelah web online, lakukan uji coba menyeluruh:
    - Username: `admin`
    - Password: `admin123`
 7. **Test Dashboard:** Coba ubah status pengajuan karyawan di dashboard menjadi "Disetujui" atau "Ditolak".
+8. **Test HRSDM Center:** Dari Dashboard, buka tombol **HRSDM Center**. Tambahkan satu data kandidat dan pastikan statusnya tampil di kartu KPI serta tersimpan di sheet `Kandidat`.
 8. **Cek "LOG AKTIVITAS":** Pastikan login Anda dan perubahan status yang Anda buat tadi tercatat dengan rapi di sheet ini.
 
 ---

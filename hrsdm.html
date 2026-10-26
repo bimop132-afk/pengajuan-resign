@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HRSDM Center - PT Mitra Sigma Tekindo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body style="background:var(--bg-body)">
+  <header class="dashboard-header"><div class="container-wide header-container" style="padding-top:.85rem;padding-bottom:.85rem">
+    <a href="hrsdm.html" class="brand-logo"><img src="assets/logo-mitra-sigma-tekindo.png" class="brand-image" alt="Logo PT Mitra Sigma Tekindo"><div class="brand-text"><p>HRSDM Center &bull; Operasional SDM</p></div></a>
+    <div class="nav-links"><a href="dashboard.html" class="nav-link-btn"><i class="fas fa-file-signature"></i> Resign</a><button onclick="refreshHRSDM()" class="btn btn-sm btn-secondary"><i class="fas fa-sync-alt"></i> Refresh</button><button onclick="logout()" class="btn btn-sm btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
+  </div></header>
+  <main class="container-wide hrsdm-main">
+    <section class="hrsdm-hero"><div><span class="eyebrow">PUSAT PENGELOLAAN SDM</span><h1>Semua tahapan karyawan, dalam satu alur.</h1><p>Kelola database, rekrutmen, kontrak, onboarding, APD, penempatan, surat peringatan, dan kebutuhan tenaga kerja.</p></div><button class="btn btn-primary" onclick="openCreateModal(currentModule)"><i class="fas fa-plus"></i> Tambah Data</button></section>
+    <section class="hrsdm-kpis" id="hrsdm-kpis"></section>
+    <section class="hrsdm-workspace">
+      <aside class="hrsdm-sidebar" id="module-nav">
+        <button data-module="candidates" class="active"><i class="fas fa-user-clock"></i> Pipeline Kandidat</button>
+        <button data-module="employees"><i class="fas fa-id-card"></i> Database Karyawan</button>
+        <button data-module="contracts"><i class="fas fa-file-contract"></i> Kontrak Kerja</button>
+        <button data-module="onboarding"><i class="fas fa-rocket"></i> Onboarding</button>
+        <button data-module="warnings"><i class="fas fa-triangle-exclamation"></i> Surat Peringatan</button>
+        <button data-module="workforce"><i class="fas fa-people-group"></i> Kebutuhan Karyawan</button>
+      </aside>
+      <section class="hrsdm-content"><div class="hrsdm-content-head"><div><h2 id="module-title">Pipeline Kandidat</h2><p id="module-description">Pantau kandidat dari seleksi sampai penempatan.</p></div><div class="module-actions"><input id="module-search" class="form-control" placeholder="Cari data..." oninput="renderModule()"><button class="btn btn-primary" onclick="openCreateModal(currentModule)"><i class="fas fa-plus"></i> Tambah</button></div></div>
+        <div id="module-summary" class="module-summary"></div><div class="table-responsive"><table class="modern-table"><thead id="module-head"></thead><tbody id="module-body"></tbody></table></div>
+      </section>
+    </section>
+  </main>
+  <div id="hrsdm-modal" class="modal"><div class="modal-card" style="max-width:760px"><div class="modal-card-header"><h3 id="modal-title">Tambah Data</h3><button onclick="closeHRModal()" class="modal-close">&times;</button></div><form id="hrsdm-form"><div id="modal-fields" class="hrsdm-form-grid"></div><div class="modal-card-footer"><button type="button" onclick="closeHRModal()" class="btn btn-secondary">Batal</button><button class="btn btn-primary" type="submit">Simpan Data</button></div></form></div></div>
+  <footer><div class="container-wide footer-flex"><p>&copy; 2026 PT Mitra Sigma Tekindo &mdash; HRSDM Center</p></div></footer>
+  <script src="js/config.js"></script><script src="js/app.js"></script><script src="js/auth.js"></script><script src="js/hrsdm.js"></script>
+</body></html>

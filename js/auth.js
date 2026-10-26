@@ -39,7 +39,7 @@ async function handleLogin(e) {
 }
 
 function checkAuth() {
-    const isDashboard = window.location.pathname.toLowerCase().includes('dashboard.html');
+    const isDashboard = window.location.pathname.toLowerCase().includes('dashboard.html') || window.location.pathname.toLowerCase().includes('hrsdm.html');
     const token = sessionStorage.getItem('auth_token');
     const loginTime = sessionStorage.getItem('login_time');
     
@@ -90,7 +90,7 @@ function togglePasswordVisibility() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const isDashboard = window.location.pathname.toLowerCase().includes('dashboard.html');
+    const isDashboard = window.location.pathname.toLowerCase().includes('dashboard.html') || window.location.pathname.toLowerCase().includes('hrsdm.html');
     const isLogin = window.location.pathname.toLowerCase().includes('login.html');
 
     if (isDashboard) {

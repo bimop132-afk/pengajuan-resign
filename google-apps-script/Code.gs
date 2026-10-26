@@ -9,6 +9,37 @@ const CANONICAL_HEADERS = [
   'Dokumen Pendukung', 'Waktu Pengajuan', 'Waktu Diproses', 'Uang Jaminan Nominal', 'Uang Jaminan Status'
 ];
 
+// Sheet terpisah agar data operasional HRSDM tidak bercampur dengan data resign.
+const HRSDM_SHEETS = {
+  employees: { name: 'Karyawan', id: 'NIK', headers: ['NIK','Nama Lengkap','Jabatan','Departemen','Sektor','Regu','Status Karyawan','Tanggal Mulai Bekerja','No WhatsApp','Dibuat Pada'] },
+  candidates: { name: 'Kandidat', id: 'ID Kandidat', headers: ['ID Kandidat','Nama Lengkap','No WhatsApp','Posisi Dilamar','Sumber Kandidat','Tahap','Tanggal Masuk','Catatan','Dibuat Pada'] },
+  contracts: { name: 'Kontrak', id: 'ID Kontrak', headers: ['ID Kontrak','NIK','Nama Lengkap','Jenis Kontrak','Tanggal Mulai','Tanggal Berakhir','Status Kontrak','Catatan','Dibuat Pada'] },
+  onboarding: { name: 'Onboarding', id: 'ID Onboarding', headers: ['ID Onboarding','NIK','Nama Lengkap','Status Dokumen','Status APD','Status Orientasi','Status Penempatan','PIC','Tanggal Target','Dibuat Pada'] },
+  warnings: { name: 'Surat Peringatan', id: 'ID SP', headers: ['ID SP','NIK','Nama Lengkap','Tingkat SP','Tanggal Surat','Masa Berlaku Sampai','Ringkasan Kejadian','Status Tindak Lanjut','Catatan','Dibuat Pada'] },
+  workforce: { name: 'Kebutuhan Karyawan', id: 'ID Kebutuhan', headers: ['ID Kebutuhan','Departemen','Jabatan','Lokasi/Sektor','Standar Kebutuhan','Aktual Karyawan','Gap','Periode','PIC','Catatan','Dibuat Pada'] }
+};
+
+function getOrCreateHRSDMSheet(ss, config) {
+  let sheet = ss.getSheetByName(config.name);
+  if (!sheet) {
+    sheet = ss.insertSheet(config.name);
+    sheet.appendRow(config.headers);
+    sheet.getRange(1, 1, 1, config.headers.length).setFontWeight('bold').setBackground('#e2e8f0');
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
+}
+
+function setupHRSDMSpreadsheet() {
+  const ss = getSpreadsheet();
+  Object.keys(HRSDM_SHEETS).forEach(key => getOrCreateHRSDMSheet(ss, HRSDM_SHEETS[key]));
+}
+
+function generateHRSDMId(module) {
+  const prefixes = { candidates: 'KDT', contracts: 'KTR', onboarding: 'ONB', warnings: 'SP', workforce: 'KBT' };
+  return `${prefixes[module] || 'HR'}-${Utilities.formatDate(new Date(), Session.getScriptTimeZone() || 'Asia/Jakarta', 'yyyyMMdd')}-${Utilities.getUuid().slice(0, 6).toUpperCase()}`;
+}
+
 function getSpreadsheet() {
   if (SPREADSHEET_ID && SPREADSHEET_ID !== 'YOUR_SPREADSHEET_ID_HERE') {
     try {
@@ -85,6 +116,7 @@ function setupSpreadsheet() {
     ujSheet.getRange(1, 1, 1, ujHeaders.length).setFontWeight('bold').setBackground('#f1f5f9');
     ujSheet.appendRow(['250710024', 'Nanda Yulianti', 500000, 'Lunas']);
   }
+  setupHRSDMSpreadsheet();
 }
 
 function getRomanMonth(month) {
@@ -281,6 +313,22 @@ function doGet(e) {
       return createJsonResponse({ success: true, data: stats });
     }
 
+    if (action === 'getHRSDMData') {
+      if (!verifyToken(e.parameter.token)) return createJsonResponse({ success: false, message: 'Token invalid' });
+      const result = {};
+      Object.keys(HRSDM_SHEETS).forEach(key => {
+        const config = HRSDM_SHEETS[key];
+        const hrSheet = getOrCreateHRSDMSheet(ss, config);
+        result[key] = getRowsDataAsObjects(hrSheet).map(row => {
+          if (key === 'workforce') {
+            row['Gap'] = (Number(row['Standar Kebutuhan']) || 0) - (Number(row['Aktual Karyawan']) || 0);
+          }
+          return row;
+        });
+      });
+      return createJsonResponse({ success: true, data: result });
+    }
+
     return createJsonResponse({ success: false, message: `Unknown action: ${action}` });
   } catch (error) {
     return createJsonResponse({ success: false, message: error.toString() });
@@ -381,6 +429,34 @@ function doPost(e) {
       lock.releaseLock();
       
       return createJsonResponse({ success: true, data: { idPengajuan, nomorSurat } });
+    }
+
+    if (action === 'saveHRSDMRecord') {
+      if (!verifyToken(data.token)) {
+        lock.releaseLock();
+        return createJsonResponse({ success: false, message: 'Token invalid' });
+      }
+      const module = (data.module || '').toString();
+      const config = HRSDM_SHEETS[module];
+      const values = data.values || {};
+      if (!config) {
+        lock.releaseLock();
+        return createJsonResponse({ success: false, message: 'Modul HRSDM tidak dikenal' });
+      }
+      const hrSheet = getOrCreateHRSDMSheet(ss, config);
+      const record = {};
+      config.headers.forEach(header => record[header] = values[header] || values[header.replace(/\s+/g, '_')] || '');
+      if (module !== 'employees') record[config.id] = generateHRSDMId(module);
+      if (module === 'employees' && !record['NIK']) {
+        lock.releaseLock();
+        return createJsonResponse({ success: false, message: 'NIK wajib diisi' });
+      }
+      if (module === 'workforce') record['Gap'] = (Number(record['Standar Kebutuhan']) || 0) - (Number(record['Aktual Karyawan']) || 0);
+      record['Dibuat Pada'] = new Date();
+      hrSheet.appendRow(config.headers.map(header => record[header]));
+      logActivity(HRD_CREDENTIALS.username, `Tambah ${config.name}`, record[config.id], JSON.stringify(values));
+      lock.releaseLock();
+      return createJsonResponse({ success: true, data: { id: record[config.id] } });
     }
 
     if (action === 'updateStatus') {
