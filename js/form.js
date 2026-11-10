@@ -1,4 +1,5 @@
 let currentStep = 1;
+let isNikDuplicate = false;
 
 function initForm() {
     const form = document.getElementById('form-resign');
@@ -7,6 +8,16 @@ function initForm() {
     const tglPengajuan = document.getElementById('tanggal_pengajuan');
     if (tglPengajuan && !tglPengajuan.value) {
         tglPengajuan.value = getCurrentDate();
+    }
+
+    const tglEfektif = document.getElementById('tanggal_efektif_resign');
+    if (tglEfektif) {
+        tglEfektif.addEventListener('change', function() {
+            checkNoticePeriod(tglPengajuan?.value || getCurrentDate(), this.value);
+        });
+        tglEfektif.addEventListener('input', function() {
+            checkNoticePeriod(tglPengajuan?.value || getCurrentDate(), this.value);
+        });
     }
 
     const alasanResign = document.getElementById('alasan_resign');
@@ -31,20 +42,74 @@ function initForm() {
         fileInput.addEventListener('change', handleFileUpload);
     }
 
-    // Auto-fetch uang jaminan when NIK loses focus or changes
+    // Auto-fetch uang jaminan and check duplicate NIK when NIK loses focus or changes
     const nikInput = document.getElementById('nik');
     if (nikInput) {
         nikInput.addEventListener('blur', function() {
             const nik = this.value.trim();
-            if (nik) fetchUangJaminan(nik);
+            if (nik) {
+                fetchUangJaminan(nik);
+                checkNikDuplicate(nik);
+            }
         });
         nikInput.addEventListener('change', function() {
             const nik = this.value.trim();
-            if (nik) fetchUangJaminan(nik);
+            if (nik) {
+                fetchUangJaminan(nik);
+                checkNikDuplicate(nik);
+            }
+        });
+        nikInput.addEventListener('input', function() {
+            isNikDuplicate = false;
+            clearFieldError('nik');
         });
     }
 
     updateStepIndicator();
+}
+
+async function checkNikDuplicate(nik) {
+    if (!nik) return false;
+    try {
+        const response = await apiCall('checkStatus', { nik: nik }, 'GET');
+        if (response.success && response.data) {
+            isNikDuplicate = true;
+            const existingId = response.data['ID Pengajuan'] || '-';
+            const existingStatus = response.data['Status Pengajuan'] || 'Diproses';
+            showFieldError('nik', `NIK ${escapeHtml(nik)} sudah terdaftar (ID: ${existingId}, Status: ${existingStatus}). NIK pengajuan tidak boleh duplikat.`);
+            return true;
+        } else {
+            isNikDuplicate = false;
+            clearFieldError('nik');
+            return false;
+        }
+    } catch (err) {
+        console.warn('Gagal cek duplikasi NIK:', err);
+        return false;
+    }
+}
+
+function checkNoticePeriod(tglPengajuanStr, tglEfektifStr) {
+    const warningEl = document.getElementById('notice-period-warning');
+    if (!warningEl) return;
+    if (!tglPengajuanStr || !tglEfektifStr) {
+        warningEl.style.display = 'none';
+        return;
+    }
+
+    const pDate = new Date(tglPengajuanStr);
+    const eDate = new Date(tglEfektifStr);
+    if (isNaN(pDate.getTime()) || isNaN(eDate.getTime())) {
+        warningEl.style.display = 'none';
+        return;
+    }
+
+    const diffDays = Math.ceil((eDate.getTime() - pDate.getTime()) / (1000 * 60 * 60 * 24));
+    if (diffDays < 30) {
+        warningEl.style.display = 'block';
+    } else {
+        warningEl.style.display = 'none';
+    }
 }
 
 function handleFileUpload(e) {
@@ -86,6 +151,10 @@ function validateStep(step) {
     
     if (step === 1) {
         if (!validateField('nik', { required: true })) isValid = false;
+        if (isNikDuplicate) {
+            showFieldError('nik', 'NIK ini sudah pernah mengajukan resign. NIK tidak boleh duplikat.');
+            isValid = false;
+        }
         if (!validateField('nama_lengkap', { required: true })) isValid = false;
         if (!validateField('no_whatsapp', { required: true })) isValid = false;
         if (!validateField('jabatan', { required: true })) isValid = false;
@@ -119,7 +188,19 @@ function validateStep(step) {
     return isValid;
 }
 
-function nextStep(step) {
+async function nextStep(step) {
+    if (currentStep === 1) {
+        const nik = getVal('nik');
+        if (nik) {
+            showLoading('Memeriksa NIK...');
+            const isDup = await checkNikDuplicate(nik);
+            hideLoading();
+            if (isDup) {
+                showToast('NIK sudah pernah mengajukan resign. NIK tidak boleh duplikat.', 'error');
+                return;
+            }
+        }
+    }
     if (!validateStep(currentStep)) return;
     
     const curSec = document.getElementById(`section${currentStep}`);
@@ -239,7 +320,12 @@ async function submitForm() {
             sessionStorage.setItem('resign_data', JSON.stringify(sessionData));
             window.location.href = `success.html?id=${encodeURIComponent(response.data.idPengajuan)}&nik=${encodeURIComponent(formData.nik)}`;
         } else {
-            showToast(response.message || 'Gagal mengirim pengajuan', 'error');
+            showToast(response.message || 'Gagal mengirim pengajuan', 'error', 6000);
+            if (response.message && response.message.toLowerCase().includes('duplikat')) {
+                isNikDuplicate = true;
+                prevStep(1);
+                showFieldError('nik', response.message);
+            }
         }
     } catch (err) {
         console.error('Submit error:', err);

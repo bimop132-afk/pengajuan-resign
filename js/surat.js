@@ -93,6 +93,11 @@ function viewLetter(data) {
     setElText('detail_status', data.status || data['Status Pengajuan'] || 'PENGAJUAN BARU');
     setElText('detail_nomor_surat', data.nomorSurat || data['Nomor Surat']);
 
+    const kat = data.kategoriResign || data['Kategori Resign'] || 'Resign Normal';
+    const denda = Number(String(data.dendaResign || data['Denda Resign'] || 0).replace(/[^\d.-]/g, '')) || 0;
+    setElText('detail_kategori', kat);
+    setElText('detail_denda', (kat === 'Habis Kontrak' || denda === 0) ? 'Bebas Denda (Rp 0)' : `Rp ${formatNumber(denda || 125000)}`);
+
     // If admin is viewing from dashboard, adjust toolbar back link
     if (sessionStorage.getItem('auth_token')) {
         const backBtn = document.querySelector('.letter-toolbar a');

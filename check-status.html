@@ -33,15 +33,17 @@
                 <h3><i class="fas fa-search text-primary"></i> Lacak Pengajuan Resign</h3>
             </div>
             
-            <form id="search-form" onsubmit="event.preventDefault(); checkStatus();">
-                <div class="form-group" style="margin-bottom: 1.25rem;">
-                    <label class="form-label" for="search_nik">NIK (Nomor Induk Karyawan) <span class="required">*</span></label>
-                    <input type="text" id="search_nik" class="form-control" placeholder="Masukkan NIK Anda" required>
-                </div>
+            <p style="color: var(--gray-600); font-size: 0.95rem; margin-bottom: 1.5rem;">
+                Cek status permohonan resign Anda cukup dengan memasukkan Nomor Induk Karyawan (NIK).
+            </p>
 
+            <form id="search-form" onsubmit="event.preventDefault(); checkStatus();">
                 <div class="form-group" style="margin-bottom: 1.75rem;">
-                    <label class="form-label" for="search_id_pengajuan">ID Pengajuan Unik <span class="required">*</span></label>
-                    <input type="text" id="search_id_pengajuan" class="form-control" placeholder="Contoh: RES-20261006-0001" required>
+                    <label class="form-label" for="search_nik">NIK (Nomor Induk Karyawan) <span class="required">*</span></label>
+                    <div style="position: relative;">
+                        <input type="text" id="search_nik" class="form-control" placeholder="Contoh: 250710024" required style="padding-left: 2.75rem; font-size: 1.05rem;">
+                        <i class="fas fa-id-badge" style="position: absolute; left: 1.1rem; top: 50%; transform: translateY(-50%); color: var(--gray-400); font-size: 1.1rem;"></i>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
@@ -57,7 +59,11 @@
                 <span id="result_status" class="badge badge-baru">PENGAJUAN BARU</span>
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 2rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem;">
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--gray-500); font-weight: 700; text-transform: uppercase;">ID Pengajuan</span>
+                    <div id="result_id" style="font-weight: 800; color: var(--primary-600); font-size: 1.05rem;">-</div>
+                </div>
                 <div>
                     <span style="font-size: 0.8rem; color: var(--gray-500); font-weight: 700; text-transform: uppercase;">Nama Karyawan</span>
                     <div id="result_nama" style="font-weight: 700; color: var(--gray-900); font-size: 1.05rem;">-</div>
@@ -78,6 +84,19 @@
                     <span style="font-size: 0.8rem; color: var(--gray-500); font-weight: 700; text-transform: uppercase;">Tanggal Efektif Resign</span>
                     <div id="result_tanggal_efektif" style="font-weight: 700; color: var(--danger-600);">-</div>
                 </div>
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--gray-500); font-weight: 700; text-transform: uppercase;">Kategori Resign</span>
+                    <div id="result_kategori" style="font-weight: 700; color: var(--gray-800);">-</div>
+                </div>
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--gray-500); font-weight: 700; text-transform: uppercase;">Status Denda</span>
+                    <div id="result_denda" style="font-weight: 700; color: var(--gray-800);">-</div>
+                </div>
+            </div>
+
+            <!-- Denda Resign Banner Alert -->
+            <div id="denda-alert-box" style="display: none; border-radius: var(--radius-md); padding: 1.15rem; margin-bottom: 1.75rem;">
+                <!-- Populated dynamically via JS -->
             </div>
 
             <!-- Visual Timeline Stepper -->
@@ -125,7 +144,7 @@
         <div id="error-area" style="display: none; max-width: 600px; margin: 0 auto; background: var(--danger-50); border: 1px solid var(--danger-100); border-radius: var(--radius-md); padding: 1.25rem; text-align: center;">
             <i class="fas fa-exclamation-circle" style="font-size: 2rem; color: var(--danger-600); margin-bottom: 0.5rem;"></i>
             <h4 style="color: var(--danger-700); margin-bottom: 0.25rem;">Data Pengajuan Tidak Ditemukan</h4>
-            <p style="color: var(--danger-700); font-size: 0.9rem; margin: 0;">Pastikan Kombinasi NIK dan ID Pengajuan Unik sudah diisi dengan benar.</p>
+            <p style="color: var(--danger-700); font-size: 0.9rem; margin: 0;">Pastikan NIK yang Anda masukkan sudah benar dan sudah pernah mengajukan resign di sistem.</p>
         </div>
 
     </main>
@@ -144,26 +163,68 @@
 
         async function checkStatus() {
             const nik = document.getElementById('search_nik').value.trim();
-            const idPengajuan = document.getElementById('search_id_pengajuan').value.trim();
 
-            if (!nik || !idPengajuan) {
-                showToast('NIK dan ID Pengajuan wajib diisi', 'warning');
+            if (!nik) {
+                showToast('Silakan masukkan NIK Anda', 'warning');
                 return;
             }
 
             showLoading('Mengecek status pengajuan...');
             try {
-                const response = await apiCall('checkStatus', { nik, idPengajuan }, 'GET');
+                const response = await apiCall('checkStatus', { nik }, 'GET');
 
                 if (response.success && response.data) {
                     currentStatusData = response.data;
                     const d = response.data;
 
+                    document.getElementById('result_id').innerText = (d['ID Pengajuan'] || '-').trim();
                     document.getElementById('result_nama').innerText = (d['Nama Lengkap'] || '-').trim();
                     document.getElementById('result_nik').innerText = (d['NIK'] || '-').trim();
                     document.getElementById('result_nomor_surat').innerText = (d['Nomor Surat'] || '-').trim();
                     document.getElementById('result_tanggal_pengajuan').innerText = formatDateLong(d['Tanggal Pengajuan']);
                     document.getElementById('result_tanggal_efektif').innerText = formatDateLong(d['Tanggal Efektif Resign']);
+
+                    const kategori = (d['Kategori Resign'] || 'Resign Normal').trim();
+                    const dendaVal = Number(String(d['Denda Resign'] || '0').replace(/[^\d.-]/g, '')) || 0;
+
+                    document.getElementById('result_kategori').innerText = kategori;
+                    
+                    const dendaEl = document.getElementById('result_denda');
+                    const dendaAlertBox = document.getElementById('denda-alert-box');
+
+                    if (kategori === 'Habis Kontrak' || dendaVal === 0) {
+                        dendaEl.innerHTML = '<span class="badge badge-disetujui">Bebas Denda (Rp 0)</span>';
+                        if (kategori === 'Habis Kontrak') {
+                            dendaAlertBox.style.display = 'block';
+                            dendaAlertBox.style.background = 'var(--success-50)';
+                            dendaAlertBox.style.border = '1px solid var(--success-100)';
+                            dendaAlertBox.innerHTML = `
+                                <div style="display: flex; gap: 0.85rem; align-items: center; color: var(--success-700);">
+                                    <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i>
+                                    <div>
+                                        <strong style="font-size: 0.95rem;">Karyawan Habis Kontrak — Bebas Denda (Rp 0)</strong>
+                                        <p style="margin: 0.2rem 0 0; font-size: 0.85rem;">Status karyawan telah diverifikasi oleh Admin sebagai Habis Kontrak sehingga tidak dikenakan denda resign.</p>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            dendaAlertBox.style.display = 'none';
+                        }
+                    } else {
+                        dendaEl.innerHTML = `<span class="badge badge-ditolak">Denda: Rp ${formatNumber(dendaVal || 125000)}</span>`;
+                        dendaAlertBox.style.display = 'block';
+                        dendaAlertBox.style.background = 'var(--danger-50)';
+                        dendaAlertBox.style.border = '1px solid var(--danger-100)';
+                        dendaAlertBox.innerHTML = `
+                            <div style="display: flex; gap: 0.85rem; align-items: center; color: var(--danger-700);">
+                                <i class="fas fa-exclamation-triangle" style="font-size: 1.5rem;"></i>
+                                <div>
+                                    <strong style="font-size: 0.95rem;">Dikenakan Denda Resign Mendadak: Rp ${formatNumber(dendaVal || 125000)}</strong>
+                                    <p style="margin: 0.2rem 0 0; font-size: 0.85rem;">Pengajuan resign diajukan kurang dari 1 bulan sebelumnya (sesuai verifikasi Admin), sehingga dikenakan denda sebesar Rp 125.000.</p>
+                                </div>
+                            </div>
+                        `;
+                    }
                     
                     const status = (d['Status Pengajuan'] || 'PENGAJUAN BARU').trim().toUpperCase();
                     const statusBadge = document.getElementById('result_status');
@@ -243,7 +304,9 @@
                     tanggalPengajuan: currentStatusData['Tanggal Pengajuan'],
                     tanggalEfektifResign: currentStatusData['Tanggal Efektif Resign'],
                     alasanResign: currentStatusData['Alasan Resign'],
-                    status: currentStatusData['Status Pengajuan']
+                    status: currentStatusData['Status Pengajuan'],
+                    kategoriResign: currentStatusData['Kategori Resign'],
+                    dendaResign: currentStatusData['Denda Resign']
                 };
                 sessionStorage.setItem('resign_data', JSON.stringify(sessionData));
                 window.location.href = `surat.html?id=${encodeURIComponent(currentStatusData['ID Pengajuan'] || '')}&nik=${encodeURIComponent(currentStatusData['NIK'] || '')}`;
@@ -253,10 +316,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const nik = params.get('nik');
-            const id = params.get('id') || params.get('idPengajuan');
-            if (nik) document.getElementById('search_nik').value = nik;
-            if (id) document.getElementById('search_id_pengajuan').value = id;
-            if (nik && id) {
+            if (nik) {
+                document.getElementById('search_nik').value = nik;
                 checkStatus();
             }
         });

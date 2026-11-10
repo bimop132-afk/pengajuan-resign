@@ -34,7 +34,7 @@ Google Spreadsheet akan bertindak sebagai database utama untuk menyimpan data re
 3. Buat sheet baru dan beri nama **LOG AKTIVITAS**.
 
 **Konfigurasi Sheet "DATA RESIGN" (atau "Data Pengajuan"):**
-Buat header di baris pertama untuk kolom A sampai Z dengan teks berikut:
+Buat header di baris pertama untuk kolom A sampai AB dengan teks berikut:
 - A: `ID Pengajuan`
 - B: `Nomor Surat`
 - C: `NIK`
@@ -61,6 +61,8 @@ Buat header di baris pertama untuk kolom A sampai Z dengan teks berikut:
 - X: `Waktu Diproses`
 - Y: `Uang Jaminan Nominal`
 - Z: `Uang Jaminan Status`
+- AA: `Kategori Resign` *(Resign Normal / Resign Mendadak / Habis Kontrak)*
+- AB: `Denda Resign` *(Nominal Denda, misal 125000 atau 0)*
 
 *(Tip: Blok baris pertama, buat tebal (Bold), dan bekukan baris (View > Freeze > 1 row) untuk kemudahan membaca.)*
 
